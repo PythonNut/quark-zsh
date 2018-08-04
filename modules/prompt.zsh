@@ -39,7 +39,13 @@ function quark-compute-prompt {
 
   # user (highlight root in red)
   if [[ -z $BORING_USERS[(R)$USER] ]]; then
+    # use spaced error code
+    PS1+='%{%B%F{red}%}%(?..%? )%{%b%F{default}%}'
+
     PS1+='%{%F{default}%}%B%{%(!.%F{red}.%F{black})%}%n'
+  else
+    # use spaceless error code
+    PS1+='%{%B%F{red}%}%(?..%?)%{%b%F{default}%}'
   fi
 
   # reset decorations
@@ -71,9 +77,6 @@ function quark-compute-prompt {
     PS1+='${${${#vcs_info_msg_0_}%0}:+ ${vcs_info_msg_0_}}'
   fi
 
-  # show the last error code
-  RPS1+='%{%B%F{red}%}%(?.. %?)%{%b%F{default}%}'
-
   # change the sigil color based on the return code and keymap
   PS1+='${${${${${PROMPT_KEYMAP}:#vicmd}:-%{%F{magenta\}%\}}:#${PROMPT_KEYMAP}}:-%{%(?.%F{green\}.%B%F{red\})%\}}'
 
@@ -104,25 +107,3 @@ function zle-keymap-select () {
   zle -R
 }
 zle -N zle-keymap-select
-
-function conditional_rprompt () {
-  if (( $? != 0 )); then
-    unsetopt transient_rprompt
-  else
-    setopt transient_rprompt
-  fi
-}
-
-add-zsh-hook precmd conditional_rprompt
-
-function quark-rprompt-zle-line-finish () {
-  if [[ $options[transient_rprompt] == off ]]; then
-    local TEMP_RPS1=$RPS1
-    RPS1='%{%B%F{red}%}%(?.. %?)%{%b%F{default}%}'
-    zle .reset-prompt
-    zle -R
-    RPS1=$TEMP_RPS1
-  fi
-}
-
-hooks-add-hook zle_line_finish_hook quark-rprompt-zle-line-finish
