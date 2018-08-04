@@ -4,10 +4,7 @@
 typeset -a _preAlias
 
 function quark-accept-line() {
-  setopt local_options
-  setopt prompt_subst
-  setopt transient_rprompt
-  setopt extended_glob
+  emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
   local cmd i
 
   if [[ $BUFFER == "." ]]; then
@@ -63,10 +60,7 @@ zle -N accept-line quark-accept-line
 integer command_not_found=1
 
 function quark-parser() {
-  setopt local_options
-  setopt extended_glob
-  setopt null_glob
-  setopt ksh_glob
+  emulate -LR zsh -o extended_glob -o null_glob -o ksh_glob
   if [[ $(type -- ${1#\\}) == (*not*|*suffix*) ]]; then
     # skip assignments
     if [[ $1 == (*=*) ]]; then
