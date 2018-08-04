@@ -3,7 +3,7 @@
 # ================
 
 # Reduce path to shortest prefixes. Heavily Optimized
-function minify_path () {
+function quark-minify-path {
   emulate -LR zsh -o glob_dots -o extended_glob
   local full_path="/" ppath cur_path dir glob
   local -a revise
@@ -49,8 +49,8 @@ function minify_path () {
   echo ${${ppath:s/\/\~/\~/}:-/}
 }
 
-function zsh_run_with_timeout () {
-  setopt local_options no_monitor
+function zsh_run_with_timeout {
+  emulate -LR zsh -o no_monitor
   (eval $2) &
   local PID=$! START_TIME=$SECONDS MTIME=$(zstat '+mtime' /proc/$!)
   while true; do
@@ -69,11 +69,11 @@ function zsh_run_with_timeout () {
   done
 }
 
-typeset -A zsh_minify_path_cache
-ZSH_MINIFY_PATH_CACHE_FILE=$ZDOTDIR/.minify-path.cache
+typeset -A quark_minify_path_cache
+QUARK_MINIFY_PATH_CACHE_FILE=$ZDOTDIR/.minify-path.cache
 
 # take every possible branch on the file system into account
-function minify_path_full () {
+function quark-minify-path-full {
   zparseopts -D -E d=DEBUG
   emulate -LR zsh -o extended_glob -o null_glob -o glob_dots
   local glob temp_glob result official_result seg limit
@@ -87,18 +87,18 @@ function minify_path_full () {
   official_result=(${~temp_glob})
 
   # open the cache file
-  if [[ ! -f $ZSH_MINIFY_PATH_CACHE_FILE ]]; then
-    touch $ZSH_MINIFY_PATH_CACHE_FILE
-    zsh_minify_path_cache=()
+  if [[ ! -f $QUARK_MINIFY_PATH_CACHE_FILE ]]; then
+    touch $QUARK_MINIFY_PATH_CACHE_FILE
+    quark_minify_path_cache=()
   fi
 
-  source $ZSH_MINIFY_PATH_CACHE_FILE
+  source $QUARK_MINIFY_PATH_CACHE_FILE
 
   local test_glob=("${(@)glob}")
   local test_path=${(@j:/:)test_glob}
-  if (( ${+zsh_minify_path_cache[$test_path]} )); then
+  if (( ${+quark_minify_path_cache[$test_path]} )); then
     # verify the cache hit:
-    local -a cache_glob=("${(@s:/:)zsh_minify_path_cache[$test_path]}")
+    local -a cache_glob=("${(@s:/:)quark_minify_path_cache[$test_path]}")
     temp_glob=("${(s/ /)cache_glob//(#m)?/$MATCH*}")
     temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}(/oN)
     if [[ -n $DEBUG ]]; then
@@ -155,20 +155,20 @@ function minify_path_full () {
   done
 
   local return=${(j:/:)glob}
-  zsh_minify_path_cache[$fullpath]=$return
-  typeset -p zsh_minify_path_cache > $ZSH_MINIFY_PATH_CACHE_FILE
+  quark_minify_path_cache[$fullpath]=$return
+  typeset -p quark_minify_path_cache > $QUARK_MINIFY_PATH_CACHE_FILE
 
   echo $return
 }
 
 # collapse empty runs too
-function minify_path_smart () {
+function quark-minify-path-smart {
   emulate -LR zsh -o brace_ccl -o extended_glob
   echo ${${1//(#m)\/\/##/%U${#MATCH}%u}//(#m)\/[^0-9]/%U${MATCH#/}%u}
 }
 
 # find shortest unique fasd prefix. Heavily optimized
-function minify_path_fasd () {
+function quark-minify-path-fasd {
   zparseopts -D -E a=ALL
   setopt local_options extended_glob
   if ! (( $+commands[fasd] )); then
