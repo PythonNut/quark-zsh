@@ -9,7 +9,12 @@ function quark-accept-line() {
   setopt transient_rprompt
   setopt extended_glob
   local cmd i
-  
+
+  if [[ $BUFFER == "." ]]; then
+    BUFFER="reset && exec $SHELL"
+    zle .accept-line
+  fi
+
   if [[ $BUFFER == [[:space:]]##* ||  $CONTEXT == "cont" ]]; then
     zle .accept-line
     return 0
