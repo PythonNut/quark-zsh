@@ -32,7 +32,7 @@ if (( $degraded_terminal[display_host] == 1 )); then
   fi
 fi
 
-function compute_prompt () {
+function quark-compute-prompt {
   emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
   local pure_ascii
   PS1=
@@ -92,7 +92,7 @@ function compute_prompt () {
 }
 
 
-compute_prompt
+quark-compute-prompt
 PS2="\${(l:\${#\${(M)\${\${(%%S)\$(eval \"echo \${\${(q)PS1}//\\\\\$/\\\$}\")//\%([BSUbfksu]|([FBK]|)\{*\})/}}%%[^$'\n']#}}:: :)\${:->$nbsp}}"
 RPS2='%^'
 
@@ -113,7 +113,9 @@ function conditional_rprompt () {
   fi
 }
 
-function zle-line-finish () {
+add-zsh-hook precmd conditional_rprompt
+
+function quark-rprompt-zle-line-finish () {
   if [[ $options[transient_rprompt] == off ]]; then
     local TEMP_RPS1=$RPS1
     RPS1='%{%B%F{red}%}%(?.. %?)%{%b%F{default}%}'
@@ -123,5 +125,4 @@ function zle-line-finish () {
   fi
 }
 
-add-zsh-hook precmd conditional_rprompt
-zle -N zle-line-finish
+hooks-add-hook zle_line_finish_hook quark-rprompt-zle-line-finish
