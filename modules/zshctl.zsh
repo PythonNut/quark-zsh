@@ -1,4 +1,4 @@
-QUARK_OPTIONS_FILE=~/Documents/quark-zsh/data/options.zsh
+QUARK_OPTIONS_FILE=${ZDOTDIR}/data/options.zsh
 
 typeset -A quark_options
 typeset -A quark_option_list
@@ -13,7 +13,7 @@ function zshctl () {
       key=$1
       if (( ${+quark_option_handlers[$key]} != 1 )); then
          echo "Unrecognized key \"${1}\"."
-         return 1
+         return
       fi
 
       value=$2
@@ -39,3 +39,5 @@ function zshctl () {
       ;;
   esac
 }
+
+zshctl load
