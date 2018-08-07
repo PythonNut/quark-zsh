@@ -1,4 +1,4 @@
-function quark-chpwd-smart-async-worker {
+function quark-chpwd-smart-worker {
   emulate -LR zsh
   TRAPTERM () {
     kill -INT $$
@@ -11,11 +11,11 @@ function quark-chpwd-smart-async-worker {
   typeset -p chpwd_minify_smart_str
 }
 
-function quark-chpwd-smart-callback {
+function quark-chpwd-smart-worker-callback {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
   # Clear the timeout entry
   local -i sched_id
-  sched_id=${zsh_scheduled_events[(i)*:*:quark-prompt-async-smart-timeout]}
+  sched_id=${zsh_scheduled_events[(i)*:*:quark-chpwd-smart-worker-timeout]}
   sched -$sched_id &> /dev/null
 
   {
@@ -34,12 +34,12 @@ function quark-chpwd-smart-callback {
 }
 
 function quark-chpwd-smart-worker-check {
-  async_process_results quark_chpwd_smart_worker quark-chpwd-smart-callback
+  async_process_results quark_chpwd_smart_worker quark-chpwd-smart-worker-callback
 }
 
 function quark-chpwd-smart-worker-setup {
   async_start_worker quark_chpwd_smart_worker -u
-  async_register_callback quark_chpwd_smart_worker quark-chpwd-smart-callback
+  async_register_callback quark_chpwd_smart_worker quark-chpwd-smart-worker-callback
 }
 
 function quark-chpwd-smart-worker-cleanup {
@@ -52,23 +52,22 @@ function quark-chpwd-smart-worker-reset {
 }
 
 
-function quark-prompt-async-smart-timeout {
+function quark-chpwd-smart-worker-timeout {
   echo chpwd smart compressor timed out! >> $ZDOTDIR/startup.log
   quark-chpwd-smart-worker-reset
 }
 
-function quark-prompt-async-start-smart {
-  async_job quark_chpwd_smart_worker quark-chpwd-smart-async-worker ${${:-.}:A}
+function quark-chpwd-smart-start {
+  async_job quark_chpwd_smart_worker quark-chpwd-smart-worker ${${:-.}:A}
 
   # sched +1 quark-chpwd-smart-worker-check
   # sched +2 quark-chpwd-smart-worker-check
   # sched +9 quark-chpwd-smart-worker-check
 
-  sched +10 quark-prompt-async-smart-timeout
+  sched +10 quark-chpwd-smart-worker-timeout
 }
 
-
-function quark-chpwd-fasd-async-worker {
+function quark-chpwd-fasd-worker {
   emulate -LR zsh
   TRAPTERM () {
     kill -INT $$
@@ -79,12 +78,12 @@ function quark-chpwd-fasd-async-worker {
   typeset -p chpwd_minify_fasd_str
 }
 
-function quark-chpwd-fasd-callback {
+function quark-chpwd-fasd-worker-callback {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
 
   # Clear the timeout entry
   local -i sched_id
-  sched_id=${zsh_scheduled_events[(i)*:*:quark-prompt-async-fasd-timeout]}
+  sched_id=${zsh_scheduled_events[(i)*:*:quark-chpwd-fasd-worker-timeout]}
   sched -$sched_id &> /dev/null
 
   {
@@ -103,12 +102,12 @@ function quark-chpwd-fasd-callback {
 }
 
 function quark-chpwd-fasd-worker-check {
-  async_process_results quark_chpwd_fasd_worker quark-chpwd-fasd-callback
+  async_process_results quark_chpwd_fasd_worker quark-chpwd-fasd-worker-callback
 }
 
 function quark-chpwd-fasd-worker-setup {
   async_start_worker quark_chpwd_fasd_worker -u
-  async_register_callback quark_chpwd_fasd_worker quark-chpwd-fasd-callback
+  async_register_callback quark_chpwd_fasd_worker quark-chpwd-fasd-worker-callback
 }
 
 function quark-chpwd-fasd-worker-cleanup {
@@ -122,22 +121,22 @@ function quark-chpwd-fasd-worker-reset {
 
 quark-chpwd-fasd-worker-setup
 
-function quark-prompt-async-fasd-timeout {
+function quark-chpwd-fasd-worker-timeout {
   echo chpwd fasd compressor timed out! >> $ZDOTDIR/startup.log
   quark-chpwd-fasd-worker-reset
 }
 
-function quark-prompt-async-start-fasd {
-  async_job quark_chpwd_fasd_worker quark-chpwd-fasd-async-worker ${${:-.}:A}
+function quark-chpwd-fasd-start {
+  async_job quark_chpwd_fasd_worker quark-chpwd-fasd-worker ${${:-.}:A}
 
   # sched +1 quark-chpwd-fasd-worker-check
   # sched +2 quark-chpwd-fasd-worker-check
   # sched +9 quark-chpwd-fasd-worker-check
 
-  sched +10 quark-prompt-async-fasd-timeout
+  sched +10 quark-chpwd-fasd-worker-timeout
 }
 
-function quark-prompt-async-compress {
+function quark-chpwd-async-start {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
   # check if we're running under Midnight Commander
   if (( $degraded_terminal[decorations] == 1 )); then
@@ -147,12 +146,12 @@ function quark-prompt-async-compress {
     chpwd_minify_fasd_str=""
     chpwd_minify_fast_str="$(quark-minify-path .)"
     chpwd_minify_smart_str="$(quark-minify-path-smart $chpwd_minify_fast_str)"
-    quark-prompt-async-start-smart
-    quark-prompt-async-start-fasd
+    quark-chpwd-smart-start
+    quark-chpwd-fasd-start
   fi
 }
 
 quark-chpwd-smart-worker-setup
 
-quark-prompt-async-compress
-add-zsh-hook chpwd quark-prompt-async-compress
+quark-chpwd-async-start
+add-zsh-hook chpwd quark-chpwd-async-start
