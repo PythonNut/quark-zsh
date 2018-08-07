@@ -1,6 +1,6 @@
 function quark-chpwd-smart-worker {
   emulate -LR zsh
-  TRAPTERM () {
+  function TRAPTERM {
     kill -INT $$
   }
 
@@ -21,7 +21,9 @@ function quark-chpwd-smart-worker-callback {
   {
     disable -r typeset
     # force variables to go up scope
-    typeset() { builtin typeset -g "$@"; }
+    function typeset {
+      builtin typeset -g "$@"
+    }
     eval $3
   } always {
     unset -f typeset 2>/dev/null
@@ -62,14 +64,14 @@ function quark-chpwd-smart-start {
 
   # sched +1 quark-chpwd-smart-worker-check
   # sched +2 quark-chpwd-smart-worker-check
-  # sched +9 quark-chpwd-smart-worker-check
+  sched +9 quark-chpwd-smart-worker-check
 
   sched +10 quark-chpwd-smart-worker-timeout
 }
 
 function quark-chpwd-fasd-worker {
   emulate -LR zsh
-  TRAPTERM () {
+  function TRAPTERM {
     kill -INT $$
   }
 
@@ -89,7 +91,9 @@ function quark-chpwd-fasd-worker-callback {
   {
     disable -r typeset
     # force variables to go up scope
-    typeset() { builtin typeset -g "$@"; }
+    function typeset {
+      builtin typeset -g "$@"
+    }
     eval $3
   } always {
     unset -f typeset 2>/dev/null
@@ -131,7 +135,7 @@ function quark-chpwd-fasd-start {
 
   # sched +1 quark-chpwd-fasd-worker-check
   # sched +2 quark-chpwd-fasd-worker-check
-  # sched +9 quark-chpwd-fasd-worker-check
+  sched +9 quark-chpwd-fasd-worker-check
 
   sched +10 quark-chpwd-fasd-worker-timeout
 }

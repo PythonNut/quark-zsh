@@ -68,6 +68,8 @@ zstyle ':vcs_info:hg*+set-message:*' hooks hg-untracked
 
 ZSH_VCS_PROMPT_VCS_FORMATS="#s"
 
+
+# Add missing functionality to the vcs prompt
 function +vi-svn-untracked {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
   if ! hash svn; then
@@ -120,7 +122,7 @@ function +vi-hg-untracked {
   fi
 }
 
-function vcs_get_root_dir () {
+function quark-vcs-get-root-dir {
   case $1 in
     (git)
       git rev-parse --show-toplevel;;
@@ -161,28 +163,12 @@ function vcs_get_root_dir () {
   esac
 }
 
-typeset -F SECONDS
-
-function vcs_async_timeout () {
-  echo vcs status timed out! >> $ZDOTDIR/startup.log
-  async_flush_jobs vcs_prompt
-
-  async_stop_worker vcs_prompt
-  async_start_worker vcs_prompt -u
-  async_register_callback vcs_prompt vcs_async_callback
-}
-
-function vcs_async_info () {
-  async_job vcs_prompt vcs_async_info_worker ${${:-.}:A}
-  sched +3 vcs_async_timeout
-}
-
-function vcs_async_info_worker () {
+function quark-vcs-worker {
   local vcs_super_info
   local vcs_root_dir
   local -a vcs_super_raw_data
 
-  TRAPTERM () {
+  function TRAPTERM {
     kill -INT $$
   }
 
@@ -190,7 +176,7 @@ function vcs_async_info_worker () {
   vcs_current_pwd=$1
   vcs_super_info="$(vcs_super_info)"
   vcs_super_raw_data=($(vcs_super_info_raw_data))
-  vcs_root_dir=${$(vcs_get_root_dir $vcs_super_raw_data[2])%/}
+  vcs_root_dir=${$(quark-vcs-get-root-dir $vcs_super_raw_data[2])%/}
 
   typeset -p vcs_current_pwd
   typeset -p vcs_super_info
@@ -198,7 +184,7 @@ function vcs_async_info_worker () {
   typeset -p vcs_root_dir
 }
 
-function vcs_async_callback () {
+function quark-vcs-worker-callback {
   local current_pwd=${${:-.}:A}
   local vcs_super_info
   local vcs_super_raw_data
@@ -206,7 +192,7 @@ function vcs_async_callback () {
 
   # Clear the timeout entry
   local -i sched_id
-  sched_id=${zsh_scheduled_events[(i)*:*:vcs_async_timeout]}
+  sched_id=${zsh_scheduled_events[(i)*:*:quark-vcs-worker-timeout]}
   sched -$sched_id &> /dev/null
 
   typeset -g vcs_last_root
@@ -219,17 +205,44 @@ function vcs_async_callback () {
   vcs_raw_data=($vcs_super_raw_data)
 
   zle reset-prompt
-  zle -R
 
   # if we're in a vcs, start an inotify process
   if [[ $current_pwd/ != $vcs_last_root/* ]]; then
-    vcs_async_info
+    quark-vcs-start
   fi
 
   vcs_last_root=$vcs_root_dir
 }
 
-async_start_worker vcs_prompt -u
-async_register_callback vcs_prompt vcs_async_callback
+function quark-vcs-worker-check {
+  async_process_results quark_vcs_worker quark-vcs-worker-callback
+}
 
-add-zsh-hook precmd vcs_async_info
+function quark-vcs-worker-setup {
+  async_start_worker quark_vcs_worker -u
+  async_register_callback quark_vcs_worker quark-vcs-worker-callback
+}
+
+function quark-vcs-worker-cleanup {
+  async_stop_worker quark_vcs_worker
+}
+
+function quark-vcs-worker-reset {
+  quark-vcs-worker-cleanup
+  quark-vcs-worker-setup
+}
+
+quark-vcs-worker-setup
+
+
+function quark-vcs-worker-timeout {
+  echo vcs status timed out! >> $ZDOTDIR/startup.log
+  quark-vcs-worker-reset
+}
+
+function quark-vcs-start {
+  async_job quark_vcs_worker quark-vcs-worker ${${:-.}:A}
+  sched +10 quark-vcs-worker-timeout
+}
+
+add-zsh-hook precmd quark-vcs-start

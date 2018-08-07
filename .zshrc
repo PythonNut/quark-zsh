@@ -24,6 +24,7 @@ autoload -Uz compinit && compinit -d $ZDOTDIR/zcompdump
 echo -n > $ZDOTDIR/startup.log
 setopt function_argzero
 
+source $ZDOTDIR/modules/core.zsh
 source $ZDOTDIR/modules/zplug.zsh
 source $ZDOTDIR/modules/autoloads.zsh
 source $ZDOTDIR/modules/zshctl.zsh
