@@ -55,7 +55,7 @@ function quark-chpwd-smart-worker-reset {
 
 
 function quark-chpwd-smart-worker-timeout {
-  echo chpwd smart compressor timed out! >> $ZDOTDIR/startup.log
+  quark-error chpwd smart compressor timed out!
   quark-chpwd-smart-worker-reset
 }
 
@@ -126,7 +126,7 @@ function quark-chpwd-fasd-worker-reset {
 quark-chpwd-fasd-worker-setup
 
 function quark-chpwd-fasd-worker-timeout {
-  echo chpwd fasd compressor timed out! >> $ZDOTDIR/startup.log
+  quark-error chpwd fasd compressor timed out!
   quark-chpwd-fasd-worker-reset
 }
 

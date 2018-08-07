@@ -236,7 +236,7 @@ quark-vcs-worker-setup
 
 
 function quark-vcs-worker-timeout {
-  echo vcs status timed out! >> $ZDOTDIR/startup.log
+  quark-error vcs status timed out!
   quark-vcs-worker-reset
 }
 
