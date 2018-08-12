@@ -24,15 +24,15 @@ function quark-accept-line() {
     return 0
   fi
 
-  # remove black completion "suggestions"
-  for i in $region_highlight; do
-    if [[ $param == (#b)[^0-9]##(<->)[^0-9]##(<->)(*) ]]; then
-      i=("$match")
-      if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
-        BUFFER=$BUFFER[1,$i[1]]$BUFFER[$i[2],$(($#BUFFER - 1))]
-      fi
-    fi
-  done
+  # # remove black completion "suggestions"
+  # for i in $region_highlight; do
+  #   if [[ $param == (#b)[^0-9]##(<->)[^0-9]##(<->)(*) ]]; then
+  #     i=("$match")
+  #     if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
+  #       BUFFER=$BUFFER[1,$i[1]]$BUFFER[$i[2],$(($#BUFFER - 1))]
+  #     fi
+  #   fi
+  # done
 
   # expand all aliases on return
   if [[ $#RBUFFER == 0 ]]; then

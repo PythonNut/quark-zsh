@@ -13,6 +13,7 @@ function {
     if [[ -z $nesting ]] && (( $afu_enabled == 1 )); then
       auto-fu-init
     fi
+    # zle reset-prompt
   }
   hooks-add-hook zle_line_init_hook quark-auto-fu-zle-line-init
 
@@ -59,27 +60,27 @@ function {
   }
 } &>> $ZDOTDIR/startup.log
 
-{
-  source $ZPLUG_HOME/repos/mafredri/zsh-async/async.zsh
-  source $ZPLUG_HOME/repos/PythonNut/zsh-autosuggestions/zsh-autosuggestions.zsh
+# {
+#   source $ZPLUG_HOME/repos/mafredri/zsh-async/async.zsh
+#   source $ZPLUG_HOME/repos/PythonNut/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-  if (( $degraded_terminal[colors256] == 1 )); then
-    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=black,bold'
-  fi
+#   if (( $degraded_terminal[colors256] == 1 )); then
+#     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=black,bold'
+#   fi
 
-  ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
-    "expand-or-complete"
-    "pcomplete"
-    "copy-earlier-word"
-  )
+#   ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
+#     "expand-or-complete"
+#     "pcomplete"
+#     "copy-earlier-word"
+#   )
 
-  # Start the autosuggestion widgets
-  _zsh_autosuggest_start() {
-    _zsh_autosuggest_check_deprecated_config
-    _zsh_autosuggest_bind_widgets
-    add-zsh-hook -d precmd _zsh_autosuggest_start
-  }
-} &>> $ZDOTDIR/startup.log
+#   # Start the autosuggestion widgets
+#   _zsh_autosuggest_start() {
+#     _zsh_autosuggest_check_deprecated_config
+#     _zsh_autosuggest_bind_widgets
+#     add-zsh-hook -d precmd _zsh_autosuggest_start
+#   }
+# } &>> $ZDOTDIR/startup.log
 
 zstyle ':auto-fu:var' autoable-function/skiplbuffers \
        '?(sudo*)+([[:space:]\\])apt-get+([[:space:]])*install+([[:space:]])*' \

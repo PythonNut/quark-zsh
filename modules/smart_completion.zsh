@@ -85,7 +85,7 @@ function pcomplete() {
   } always {
     unfunction "pcomplete_forward_word"
   }
-  _zsh_highlight 2>/dev/null
+  _zsh_highlight
 }
 
 bindkey -M menuselect . self-insert

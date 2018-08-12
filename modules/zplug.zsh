@@ -9,7 +9,8 @@ source $ZPLUG_HOME/init.zsh
 unset ZPLUG_CACHE_CHECK_FOR_CHANGES
 
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-zplug "zsh-users/zsh-syntax-highlighting"
+# zplug "zsh-users/zsh-syntax-highlighting"
+zplug 'zdharma/fast-syntax-highlighting'
 zplug "zsh-users/zsh-completions"
 zplug "yonchu/zsh-vcs-prompt"
 zplug "seebi/dircolors-solarized"
@@ -21,8 +22,10 @@ zplug "yonchu/zaw-src-git-show-branch", on:"zsh-users/zaw", lazy:true
 zplug "mafredri/zsh-async"
 zplug "knu/zsh-git-escape-magic"
 zplug "coldfix/zsh-soft-history", lazy:true
-zplug "hchbaw/auto-fu.zsh", at:pu, on:"zsh-users/zsh-syntax-highlighting"
-zplug "PythonNut/zsh-autosuggestions", on:"zsh-async", use:"*.zsh"
+# zplug "dixler/auto-fu.zsh", on:"zsh-users/zsh-syntax-highlighting"
+zplug "HerringtonDarkholme/auto-fu.zsh", on:"zdharma/fast-syntax-highlighting"
+# zplug "PythonNut/zsh-autosuggestions", on:"zsh-async", use:"*.zsh"
+# zplug 'zsh-users/zsh-autosuggestions'
 zplug "willghatch/zsh-hooks"
 
 if ! zplug check; then

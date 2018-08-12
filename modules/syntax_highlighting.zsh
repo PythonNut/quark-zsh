@@ -2,6 +2,9 @@
 # ZSH syntax highlighting
 # =======================
 
+FSH_HOME=$ZDOTDIR/fsh
+fast-theme $ZDOTDIR/fsh/custom.ini
+
 {
   ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 
