@@ -34,7 +34,6 @@ if [[ -f $ZDOTDIR/local/early.zsh ]]; then
   source $ZDOTDIR/local/early.zsh
 fi
 source $ZDOTDIR/modules/fasd.zsh
-source $ZDOTDIR/modules/syntax_highlighting.zsh
 source $ZDOTDIR/modules/auto_fu.zsh
 source $ZDOTDIR/modules/term.zsh
 source $ZDOTDIR/modules/aliases.zsh
