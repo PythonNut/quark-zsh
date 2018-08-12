@@ -31,7 +31,9 @@ function zshctl () {
       typeset -p quark_options > $QUARK_OPTIONS_FILE
       ;;
     (load)
-      source $QUARK_OPTIONS_FILE
+      if [[ -f $QUARK_OPTIONS_FILE ]]; then
+         source $QUARK_OPTIONS_FILE
+      fi
       ;;
     (*)
       echo "Unrecognized subcommand \"${1}\"."
