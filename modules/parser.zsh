@@ -8,7 +8,7 @@ function quark-accept-line() {
   local cmd i
 
   if [[ $BUFFER == "." ]]; then
-    BUFFER="reset && exec $SHELL"
+    BUFFER="exec $SHELL"
     zle .accept-line
   fi
 
