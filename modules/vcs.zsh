@@ -215,7 +215,8 @@ function quark-vcs-worker-callback {
 }
 
 function quark-vcs-worker-check {
-  async_process_results quark_vcs_worker quark-vcs-worker-callback
+  quark-with-protected-return-code \
+      async_process_results quark_vcs_worker quark-vcs-worker-callback
 }
 
 function quark-vcs-worker-setup {

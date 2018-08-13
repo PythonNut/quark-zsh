@@ -36,7 +36,8 @@ function quark-chpwd-smart-worker-callback {
 }
 
 function quark-chpwd-smart-worker-check {
-  async_process_results quark_chpwd_smart_worker quark-chpwd-smart-worker-callback
+  quark-with-protected-return-code \
+      async_process_results quark_chpwd_smart_worker quark-chpwd-smart-worker-callback
 }
 
 function quark-chpwd-smart-worker-setup {
@@ -106,7 +107,8 @@ function quark-chpwd-fasd-worker-callback {
 }
 
 function quark-chpwd-fasd-worker-check {
-  async_process_results quark_chpwd_fasd_worker quark-chpwd-fasd-worker-callback
+  quark-with-protected-return-code \
+      async_process_results quark_chpwd_fasd_worker quark-chpwd-fasd-worker-callback
 }
 
 function quark-chpwd-fasd-worker-setup {
