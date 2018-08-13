@@ -96,7 +96,7 @@ function quark-compute-prompt {
 
 
 quark-compute-prompt
-PS2="\${(l:\${#\${(M)\${\${(%%S)\$(eval \"echo \${\${(q)PS1}//\\\\\$/\\\$}\")//\%([BSUbfksu]|([FBK]|)\{*\})/}}%%[^$'\n']#}}:: :)\${:->$nbsp}}"
+PS2='${(l:$(quark-strlen "${(e)PS1}"):: :)${:->$nbsp}}'
 RPS2='%^'
 
 # intercept keymap selection

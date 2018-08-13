@@ -62,3 +62,12 @@ function quark-return {
       echo $@
   fi
 }
+
+quark-strlen () {
+  local string="$@"
+  local escape='%{*%}'
+  local zero='%([BSUbfksu]|([FB]|){*})'
+  local plain=${(S)${(S)string//$~escape/}//$~zero}
+  local subbed=${(%%)plain}
+  echo $#subbed
+}
