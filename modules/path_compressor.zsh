@@ -49,26 +49,6 @@ function quark-minify-path {
   echo ${${ppath:s/\/\~/\~/}:-/}
 }
 
-function zsh_run_with_timeout {
-  emulate -LR zsh -o no_monitor
-  (eval $2) &
-  local PID=$! START_TIME=$SECONDS MTIME=$(zstat '+mtime' /proc/$!)
-  while true; do
-    sleep 0.001
-    # TODO: This probably isn't portable
-    if [[ ! -d /proc/$PID || $(zstat '+mtime' /proc/$PID) != $MTIME ]]; then
-      break
-    fi
-    if (( $SECONDS - $START_TIME > $1 )); then
-      {
-        kill $PID
-        wait $PID
-      } 2> /dev/null
-      break
-    fi
-  done
-}
-
 typeset -A quark_minify_path_cache
 QUARK_MINIFY_PATH_CACHE_FILE=$ZDOTDIR/.minify-path.cache
 
@@ -104,7 +84,7 @@ function quark-minify-path-full {
     if [[ -n $DEBUG ]]; then
       echo Testing cached: $temp_glob
     fi
-    result=($(zsh_run_with_timeout 0.3 "setopt glob_dots extended_glob; echo $temp_glob"))
+    result=($(quark-with-timeout 0.3 "setopt glob_dots extended_glob; echo $temp_glob"))
     if [[ $result == $official_result ]]; then
       glob=("${(@)cache_glob}")
     fi
@@ -124,7 +104,7 @@ function quark-minify-path-full {
       temp_glob=("${(s/ /)glob//(#m)?/$MATCH*}")
       temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}
       temp_glob+=$limit
-      result=($(zsh_run_with_timeout 0.3 "setopt glob_dots extended_glob; echo $temp_glob"))
+      result=($(quark-with-timeout 0.3 "setopt glob_dots extended_glob; echo $temp_glob"))
       if [[ $result != $official_result ]]; then
         glob[$index]=$old_glob
         seg=$old_glob
