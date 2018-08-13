@@ -190,10 +190,7 @@ function quark-vcs-worker-callback {
   local vcs_super_raw_data
   local vcs_root_dir
 
-  # Clear the timeout entry
-  local -i sched_id
-  sched_id=${zsh_scheduled_events[(i)*:*:quark-vcs-worker-timeout]}
-  sched -$sched_id &> /dev/null
+  quark-sched-remove quark-vcs-worker-timeout
 
   typeset -g vcs_last_root
 

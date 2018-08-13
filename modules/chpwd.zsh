@@ -13,10 +13,9 @@ function quark-chpwd-smart-worker {
 
 function quark-chpwd-smart-worker-callback {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
-  # Clear the timeout entry
-  local -i sched_id
-  sched_id=${zsh_scheduled_events[(i)*:*:quark-chpwd-smart-worker-timeout]}
-  sched -$sched_id &> /dev/null
+
+  quark-sched-remove quark-chpwd-smart-worker-timeout
+  quark-sched-remove quark-chpwd-smart-worker-check
 
   {
     disable -r typeset
@@ -84,10 +83,8 @@ function quark-chpwd-fasd-worker {
 function quark-chpwd-fasd-worker-callback {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
 
-  # Clear the timeout entry
-  local -i sched_id
-  sched_id=${zsh_scheduled_events[(i)*:*:quark-chpwd-fasd-worker-timeout]}
-  sched -$sched_id &> /dev/null
+  quark-sched-remove quark-chpwd-fasd-worker-timeout
+  quark-sched-remove quark-chpwd-fasd-worker-check
 
   {
     disable -r typeset
