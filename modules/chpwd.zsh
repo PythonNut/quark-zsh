@@ -17,17 +17,7 @@ function quark-chpwd-smart-worker-callback {
   quark-sched-remove quark-chpwd-smart-worker-timeout
   quark-sched-remove quark-chpwd-smart-worker-check
 
-  {
-    disable -r typeset
-    # force variables to go up scope
-    function typeset {
-      builtin typeset -g "$@"
-    }
-    eval $3
-  } always {
-    unset -f typeset 2>/dev/null
-    enable -r typeset
-  }
+  quark-eval-overriding-globals $3
 
   float -g quark_chpwd_smart_duration=$4
   zle && zle reset-prompt
@@ -86,17 +76,7 @@ function quark-chpwd-fasd-worker-callback {
   quark-sched-remove quark-chpwd-fasd-worker-timeout
   quark-sched-remove quark-chpwd-fasd-worker-check
 
-  {
-    disable -r typeset
-    # force variables to go up scope
-    function typeset {
-      builtin typeset -g "$@"
-    }
-    eval $3
-  } always {
-    unset -f typeset 2>/dev/null
-    enable -r typeset
-  }
+  quark-eval-overriding-globals $3
 
   float -g quark_chpwd_fasd_duration=$4
   zle && zle reset-prompt

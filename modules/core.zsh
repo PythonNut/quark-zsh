@@ -18,3 +18,17 @@ function quark-sched-remove {
     sched -$sched_id &> /dev/null
   done
 }
+
+function quark-eval-overriding-globals {
+  {
+    disable -r typeset
+    # force variables to go up scope
+    function typeset {
+      builtin typeset -g "$@"
+    }
+    eval $@
+  } always {
+    unset -f typeset 2>/dev/null
+    enable -r typeset
+  }
+}
