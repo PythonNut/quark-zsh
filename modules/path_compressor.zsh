@@ -4,10 +4,12 @@
 
 # Reduce path to shortest prefixes. Heavily Optimized
 function quark-minify-path {
+  zparseopts -D -E r=USE_REPLY
   emulate -LR zsh -o glob_dots -o extended_glob
   local full_path="/" ppath cur_path dir glob
   local -a revise
   local -i matches col
+
   for token in ${(s:/:)${1:A}/${HOME:A}/\~}; do
     cur_path=${full_path:s/\~/$HOME/}
     col=1
@@ -46,7 +48,9 @@ function quark-minify-path {
     full_path=${full_path%%(/##)}
     full_path+="/$token"
   done
-  echo ${${ppath:s/\/\~/\~/}:-/}
+
+  local return="${${ppath:s/\/\~/\~/}:-/}"
+  quark-return "$USE_REPLY" "$return"
 }
 
 typeset -A quark_minify_path_cache
@@ -54,7 +58,7 @@ QUARK_MINIFY_PATH_CACHE_FILE=$ZDOTDIR/.minify-path.cache
 
 # take every possible branch on the file system into account
 function quark-minify-path-full {
-  zparseopts -D -E d=DEBUG
+  zparseopts -D -E d=DEBUG r=USE_REPLY
   emulate -LR zsh -o extended_glob -o null_glob -o glob_dots
   local glob temp_glob result official_result seg limit
   fullpath=${${1:A}/${HOME:A}/\~}
@@ -138,34 +142,37 @@ function quark-minify-path-full {
   quark_minify_path_cache[$fullpath]=$return
   typeset -p quark_minify_path_cache > $QUARK_MINIFY_PATH_CACHE_FILE
 
-  echo $return
+  quark-return "$USE_REPLY" "$return"
 }
 
 # collapse empty runs too
 function quark-minify-path-smart {
+  zparseopts -D -E d=DEBUG r=USE_REPLY
   emulate -LR zsh -o brace_ccl -o extended_glob
-  echo ${${1//(#m)\/\/##/%U${#MATCH}%u}//(#m)\/[^0-9]/%U${MATCH#/}%u}
+
+  local return=${${1//(#m)\/\/##/%U${#MATCH}%u}//(#m)\/[^0-9]/%U${MATCH#/}%u}
+  quark-return "$USE_REPLY" "$return"
 }
 
 # find shortest unique fasd prefix. Heavily optimized
 function quark-minify-path-fasd {
-  zparseopts -D -E a=ALL
-  setopt local_options extended_glob
+  zparseopts -D -E a=ALL r=USE_REPLY
+  emulate -LR zsh -o extended_glob
   if ! (( $+commands[fasd] )); then
-    printf ""
+    quark-return "$USE_REPLY" ""
     return
   fi
 
   1=${${1:A}%/}
   if [[ $1 == ${${:-~}:A} ]]; then
-    printf ""
+    quark-return "$USE_REPLY" ""
     return
   fi
 
 
   local dirs=("${(@f)$(fasd -l)}")
   if ! (( ${+dirs[(r)$1]} )); then
-    printf ""
+    quark-return "$USE_REPLY" ""
     return 1
   fi
 
@@ -176,7 +183,7 @@ function quark-minify-path-fasd {
       test=${minimal_path[$k,$(($k+$i))]}
       if [[ -z ${index[(r)*$test*]} ]]; then
         if [[ $(type $test) == *not* && -z ${(P)temp} || -n $ALL ]]; then
-          echo $test
+          quark-return "$USE_REPLY" "$test"
           return
         fi
       fi
@@ -192,5 +199,7 @@ function quark-minify-path-fasd {
       minimal_path[$i]=$temp
     fi
   done
-  echo "${${${minimal_path// ##/ }%%[[:space:]]#}##[[:space:]]#}"
+
+  local return="${${${minimal_path// ##/ }%%[[:space:]]#}##[[:space:]]#}"
+  quark-return "$USE_REPLY" "$return"
 }

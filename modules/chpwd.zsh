@@ -4,8 +4,11 @@ function quark-chpwd-smart-worker {
     kill -INT $$
   }
 
-  local chpwd_minify_full_str="$(quark-minify-path-full $1)"
-  local chpwd_minify_smart_str="$(quark-minify-path-smart $chpwd_minify_full_str)"
+  quark-minify-path-full -r $1
+  local chpwd_minify_full_str=$REPLY
+
+  quark-minify-path-smart -r $chpwd_minify_full_str
+  local chpwd_minify_smart_str=$REPLY
 
   typeset -p chpwd_minify_full_str
   typeset -p chpwd_minify_smart_str
@@ -65,7 +68,8 @@ function quark-chpwd-fasd-worker {
     kill -INT $$
   }
 
-  local chpwd_minify_fasd_str="$(quark-minify-path-fasd $1)"
+  quark-minify-path-fasd -r $1
+  local chpwd_minify_fasd_str=$reply
 
   typeset -p chpwd_minify_fasd_str
 }
@@ -127,8 +131,13 @@ function quark-chpwd-async-start {
     zle && zle reset-prompt
   else
     chpwd_minify_fasd_str=""
-    chpwd_minify_fast_str="$(quark-minify-path .)"
-    chpwd_minify_smart_str="$(quark-minify-path-smart $chpwd_minify_fast_str)"
+
+    quark-minify-path -r .
+    chpwd_minify_fast_str=$REPLY
+
+    quark-minify-path-smart -r $chpwd_minify_fast_str
+    chpwd_minify_smart_str=$REPLY
+
     quark-chpwd-smart-start
     quark-chpwd-fasd-start
   fi

@@ -52,3 +52,13 @@ function quark-with-timeout {
     fi
   done
 }
+
+function quark-return {
+  local USE_REPLY=$1
+  shift
+  if [[ -n $USE_REPLY ]]; then
+      REPLY="$@"
+  else
+      echo $@
+  fi
+}
