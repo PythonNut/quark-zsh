@@ -157,7 +157,7 @@ function quark-vcs-get-root-dir {
     (cvs)
       echo $CVSROOT;;
     (*)
-      echo $(pwd);;
+      echo $PWD;;
   esac
 }
 
