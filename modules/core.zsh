@@ -35,15 +35,24 @@ function quark-eval-overriding-globals {
 
 function quark-with-timeout {
   emulate -LR zsh -o no_monitor
-  (eval $2) &
-  local PID=$! START_TIME=$SECONDS MTIME=$(zstat '+mtime' /proc/$!)
+  local stat_reply
+  local -F time_limit=$1
+  shift
+  (eval $@) &
+  # TODO: /proc probably isn't portable
+  zstat -A stat_reply '+mtime' /proc/$!
+
+  local PID=$! START_TIME=$SECONDS MTIME=${stat_reply[1]}
   while true; do
     sleep 0.001
-    # TODO: This probably isn't portable
-    if [[ ! -d /proc/$PID || $(zstat '+mtime' /proc/$PID) != $MTIME ]]; then
+    if [[ ! -d /proc/$PID ]]; then
         break
     fi
-    if (( $SECONDS - $START_TIME > $1 )); then
+    zstat -A stat_reply '+mtime' /proc/$PID
+    if [[ ${stat_reply[1]} != $MTIME ]]; then
+        break
+    fi
+    if (( $SECONDS - $START_TIME > $time_limit )); then
         {
           kill $PID
           wait $PID
