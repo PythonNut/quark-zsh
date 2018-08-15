@@ -164,12 +164,14 @@ colors
 autoload -Uz chpwd_recent_dirs cdr
 add-zsh-hook chpwd chpwd_recent_dirs
 
-touch $ZDOTDIR/zdirs
-
 zstyle ':chpwd:*' recent-dirs-max 100
 zstyle ':chpwd:*' recent-dirs-default true
 zstyle ':chpwd:*' recent-dirs-pushd true
 zstyle ':chpwd:*' recent-dirs-file "$ZDOTDIR/zdirs"
+
+if [[ ! -f $ZDOTDIR/scp: ]]; then
+  touch $ZDOTDIR/zdirs
+fi
 
 dirstack=(${(u@Q)${(f@)mapfile[$ZDOTDIR/zdirs]}})
 
