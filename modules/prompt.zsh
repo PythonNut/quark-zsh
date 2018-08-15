@@ -2,27 +2,59 @@
 # Prompt
 # ======
 
+QUARK_SIGNAL_NAME=
+typeset -A QUARK_ERROR_CODE_SIGNAL_MAP=(
+    [129]=HUP
+    [130]=INT
+    [131]=QUIT
+    [132]=ILL
+    [134]=ABRT
+    [136]=FPE
+    [137]=KILL
+    [139]=SEGV
+    [141]=PIPE
+    [143]=TERM
+
+    # usual exit codes
+    [-1]=FATAL
+    [1]=WARN # Miscellaneous errors, such as "divide by zero"
+    [2]=BUILTINMISUSE # misuse of shell builtins (pretty rare)
+    [126]=CCANNOTINVOKE # cannot invoke requested command (ex : source script_with_syntax_error)
+    [127]=CNOTFOUND # command not found (ex : source script_not_existing)
+
+    # assuming we are on an x86 system here
+    # this MIGHT get annoying since those are in a range of exit codes
+    # programs sometimes use.... we'll see.
+    [19]=STOP
+    [20]=TSTP
+    [21]=TTIN
+    [22]=TTOU
+)
+
 if (( $degraded_terminal[unicode] != 1 )); then
   # a prompt that commits suicide when pasted
-  nbsp=$'\u00A0'
+  QUARK_NBSP=$'\u00A0'
   function kill_prompt_on_paste () {
-    PASTED=${(F)${${(f)PASTED}#*$nbsp}}
+    PASTED=${(F)${${(f)PASTED}#*$QUARK_NBSP}}
   }
   zstyle :bracketed-paste-magic paste-init kill_prompt_on_paste
+
+  QUARK_RETURN_CODE_ARROW='↪'
 else
-  nbsp=$' '
+  QUARK_NBSP=$' '
+  QUARK_RETURN_CODE_ARROW='→'
 fi
 
-PROMPT_HOSTNAME=
-PROMPT_KEYMAP=
+QUARK_PROMPT_HOSTNAME=
+QUARK_PROMPT_KEYMAP=
 
 if (( $degraded_terminal[display_host] == 1 )); then
   if (( $degraded_terminal[colors256] != 1 )); then
     if (( $+commands[md5sum] )); then
       # hash hostname and generate one of 256 colors
-      PROMPT_HOSTNAME="%F{$((0x${$(echo ${HOST%%.*} |md5sum):1:2}))}"
+      QUARK_PROMPT_HOSTNAME="%F{$((0x${$(echo ${HOST%%.*} |md5sum):1:2}))}"
     elif (( $+commands[md5] )); then
-      PROMPT_HOSTNAME="%F{$((0x${$(echo ${HOST%%.*} |md5):1:2}))}"
+      QUARK_PROMPT_HOSTNAME="%F{$((0x${$(echo ${HOST%%.*} |md5):1:2}))}"
     fi
     if [[ -n $PROMPT_HOSTNAME_FULL ]]; then
       PROMPT_HOSTNAME+="@${HOST}%k%f"
@@ -37,21 +69,17 @@ function quark-compute-prompt {
   local pure_ascii
   PS1=
 
+  PS1+=$'%{%B%F{red}%}%(?..↪ %?${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]:+:${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]}}\n)%{%b%F{default}%}'
+
   # user (highlight root in red)
   if [[ -z $BORING_USERS[(R)$USER] ]]; then
-    # use spaced error code
-    PS1+='%{%B%F{red}%}%(?..%? )%{%b%F{default}%}'
-
     PS1+='%{%F{default}%}%B%{%(!.%F{red}.%F{black})%}%n'
-  else
-    # use spaceless error code
-    PS1+='%{%B%F{red}%}%(?..%?)%{%b%F{default}%}'
   fi
 
   # reset decorations
   PS1+='%u%{%b%F{default}%}'
 
-  PS1+="$PROMPT_HOSTNAME "
+  PS1+="$QUARK_PROMPT_HOSTNAME "
 
   # show background jobs
   PS1+='%(1j.%{%B%F{yellow}%}%j&%{%F{default}%b%} .)'
@@ -78,7 +106,7 @@ function quark-compute-prompt {
   fi
 
   # change the sigil color based on the return code and keymap
-  PS1+='${${${${${PROMPT_KEYMAP}:#vicmd}:-%{%F{magenta\}%\}}:#${PROMPT_KEYMAP}}:-%{%(?.%F{green\}.%B%F{red\})%\}}'
+  PS1+='${${${${${QUARK_PROMPT_KEYMAP}:#vicmd}:-%{%F{magenta\}%\}}:#${QUARK_PROMPT_KEYMAP}}:-%{%(?.%F{green\}.%B%F{red\})%\}}'
 
   # compute the sigil
   if [[ -n $TMUX ]]; then
@@ -91,19 +119,18 @@ function quark-compute-prompt {
   else
     PS1+=" %#"
   fi
-  PS1+="%{%b%F{default}%}$nbsp"
+  PS1+="%{%b%F{default}%}$QUARK_NBSP"
 }
 
 
 quark-compute-prompt
-PS2='${(l:$(quark-strlen "${(e)PS1}"):: :)${:->$nbsp}}'
+PS2='${(l:$(quark-strlen "${(e)PS1}"):: :)${:->$QUARK_NBSP}}'
 RPS2='%^'
 
 # intercept keymap selection
 function zle-keymap-select () {
   emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
-  PROMPT_KEYMAP=$KEYMAP
-  zle .reset-prompt
-  zle -R
+  QUARK_PROMPT_KEYMAP=$KEYMAP
+  zle reset-prompt
 }
 zle -N zle-keymap-select

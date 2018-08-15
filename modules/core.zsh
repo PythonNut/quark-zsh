@@ -63,7 +63,7 @@ function quark-return {
   fi
 }
 
-quark-strlen () {
+function quark-strlen {
   local string="$@"
   local escape='%{*%}'
   local zero='%([BSUbfksu]|([FB]|){*})'
