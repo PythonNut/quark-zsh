@@ -8,7 +8,7 @@
 /zcompdump
 /macros
 /.zcalc_history
-/.zplug
+/.zplugin
 /.minify-path.cache
 
 *.zwc

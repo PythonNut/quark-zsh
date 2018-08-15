@@ -1,34 +1,42 @@
-export ZPLUG_HOME=$ZDOTDIR/.zplug
+export ZPLG_HOME=$ZDOTDIR/.zplugin
 # Check if zplug is installed
-if [[ ! -d $ZPLUG_HOME ]]; then
-  git clone https://github.com/zplug/zplug $ZPLUG_HOME
-  chmod og-x $ZPLUG_HOME
+if [[ ! -d $ZPLG_HOME ]]; then
+  mkdir $ZPLG_HOME
+  git clone --depth 10 https://github.com/zdharma/zplugin.git $ZPLG_HOME/bin
+  chmod og-x $ZPLG_HOME
 fi
 
-source $ZPLUG_HOME/init.zsh
-unset ZPLUG_CACHE_CHECK_FOR_CHANGES
+source $ZPLG_HOME/bin/zplugin.zsh
+autoload -Uz _zplugin
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
 
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-zplug "zdharma/fast-syntax-highlighting"
-zplug "zsh-users/zsh-completions"
-zplug "yonchu/zsh-vcs-prompt"
-zplug "seebi/dircolors-solarized"
-zplug "clvv/fasd", as:command
-zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zaw"
-zplug "yonchu/zaw-src-git-log", on:"zsh-users/zaw", lazy:true
-zplug "yonchu/zaw-src-git-show-branch", on:"zsh-users/zaw", lazy:true
-zplug "mafredri/zsh-async"
-zplug "knu/zsh-git-escape-magic"
-zplug "coldfix/zsh-soft-history", lazy:true
-zplug "hchbaw/auto-fu.zsh", at:pu, on:"zdharma/fast-syntax-highlighting"
-zplug "PythonNut/zsh-autosuggestions", on:"zsh-async", use:"*.zsh"
-zplug "willghatch/zsh-hooks"
+zplugin ice atload'[[ -f  ${FAST_WORK_DIR}/current_theme.zsh ]] || fast-theme $ZDOTDIR/fsh/custom.ini'
+zplugin light zdharma/fast-syntax-highlighting
 
-if ! zplug check; then
-    zplug install
-fi
+zplugin ice blockf
+zplugin light zsh-users/zsh-completions
 
-FAST_WORK_DIR=$ZDOTDIR/fsh
+zplugin light yonchu/zsh-vcs-prompt
 
-zplug load
+zplugin ice atclone"dircolors -b dircolors.ansi-universal | sed 's/di=36/di=1;30/' > c.zsh" atpull'%atclone' pick'c.zsh'
+zplugin light seebi/dircolors-solarized
+
+zplugin ice as'command'
+zplugin light clvv/fasd
+
+zplugin light zsh-users/zsh-history-substring-search
+
+zplugin light zsh-users/zaw
+zplugin light yonchu/zaw-src-git-log
+zplugin light yonchu/zaw-src-git-show-branch
+
+zplugin ice pick'git-escape-magic'
+zplugin light knu/zsh-git-escape-magic
+
+zplugin light PythonNut/auto-fu.zsh
+
+zplugin ice pick'async.zsh'
+zplugin light mafredri/zsh-async
+zplugin ice wait'0' atload'_zsh_autosuggest_start' lucid
+zplugin light PythonNut/zsh-autosuggestions
+zplugin light willghatch/zsh-hooks

@@ -155,18 +155,7 @@ if [[ $(locale) != *LANG=*UTF-8* ]]; then
   degraded_terminal[unicode]=1
 fi
 
-# ======
-# Colors
-# ======
 colors
-
-if (( $+commands[dircolors] )); then
-  function () {
-    local DIRCOLORS
-    DIRCOLORS=$ZPLUG_HOME/repos/seebi/dircolors-solarized/dircolors.ansi-universal
-    eval ${$(dircolors $DIRCOLORS):s/di=36/di=1;30/}
-  }
-fi
 
 # ==========================
 # Persistent directory stack

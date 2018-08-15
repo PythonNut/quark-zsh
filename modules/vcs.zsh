@@ -2,8 +2,6 @@
 # Version Control System
 # ======================
 
-source $ZPLUG_HOME/repos/yonchu/zsh-vcs-prompt/zshrc.sh
-
 zstyle ':vcs_info:*' enable git svn cvs hg bzr
 zstyle ':vcs_info:*' check-for-changes true
 

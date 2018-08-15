@@ -60,9 +60,6 @@ function {
 } &>> $ZDOTDIR/startup.log
 
 {
-  source $ZPLUG_HOME/repos/mafredri/zsh-async/async.zsh
-  source $ZPLUG_HOME/repos/PythonNut/zsh-autosuggestions/zsh-autosuggestions.zsh
-
   if (( $degraded_terminal[colors256] == 1 )); then
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=black,bold'
   fi
@@ -74,7 +71,7 @@ function {
   )
 
   # Start the autosuggestion widgets
-  _zsh_autosuggest_start() {
+  function _zsh_autosuggest_start {
     _zsh_autosuggest_check_deprecated_config
     _zsh_autosuggest_bind_widgets
     add-zsh-hook -d precmd _zsh_autosuggest_start
