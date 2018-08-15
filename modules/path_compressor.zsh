@@ -182,7 +182,7 @@ function quark-minify-path-fasd {
     for ((k=1; k<=$#minimal_path-$i; k++)); do
       test=${minimal_path[$k,$(($k+$i))]}
       if [[ -z ${index[(r)*$test*]} ]]; then
-        if [[ $(type $test) == *not* && -z ${(P)temp} || -n $ALL ]]; then
+        if [[ $(type $test) == *not* || -n $ALL ]]; then
           quark-return "$USE_REPLY" "$test"
           return
         fi
