@@ -151,7 +151,7 @@ if [[ ${PWD:A} == (${${:-~}:A}|/) ]]; then
   fi
 fi
 
-if [[ $(locale) != *LANG=*UTF-8* ]]; then
+if [[ $LANG != *UTF-8* ]]; then
   degraded_terminal[unicode]=1
 fi
 
