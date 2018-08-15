@@ -8,7 +8,7 @@ function autohelp() {
   if [[ ! -f $ZDOTDIR/helpgen ]]; then
     return 1
   fi
-  for cmd in $(<$ZDOTDIR/helpgen); do
+  for cmd in ${(f@)mapfile[$ZDOTDIR/helpgen]}; do
     compdef _gnu_generic $cmd
   done
 }

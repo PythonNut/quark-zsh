@@ -23,5 +23,6 @@
   zmodload zsh/mathfunc            # mathematical functions in zsh
   zmodload zsh/terminfo            # terminal parameters from terminfo
   zmodload zsh/complist            # various completion functions
+  zmodload zsh/mapfile             # read files directly
   
 } &>> $ZDOTDIR/startup.log

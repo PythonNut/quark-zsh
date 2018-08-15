@@ -106,7 +106,7 @@ case $_OLD_TERM in
     elif [[ -f /lib/terminfo/x/xterm-256color ]]; then
       export TERM=xterm-256color
     elif [[ -f /usr/share/misc/termcap ]]; then
-      if [[ $(</usr/share/misc/termcap) == *xterm-256color* ]]; then
+      if [[ $mapfile[/usr/share/misc/termcap] == *xterm-256color* ]]; then
         export TERM=xterm-256color
       fi
     fi;;
@@ -171,7 +171,7 @@ zstyle ':chpwd:*' recent-dirs-default true
 zstyle ':chpwd:*' recent-dirs-pushd true
 zstyle ':chpwd:*' recent-dirs-file "$ZDOTDIR/zdirs"
 
-dirstack=(${(u@Q)$(<$ZDOTDIR/zdirs)})
+dirstack=(${(u@Q)${(f@)mapfile[$ZDOTDIR/zdirs]}})
 
 zstyle ':completion:*:cdr:*' verbose true
 zstyle ':completion:*:cdr:*' extra-verbose true
