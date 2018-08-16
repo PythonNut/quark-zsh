@@ -25,7 +25,7 @@ echo -n > $ZDOTDIR/startup.log
 setopt function_argzero
 
 source $ZDOTDIR/modules/core.zsh
-source $ZDOTDIR/modules/zplug.zsh
+source $ZDOTDIR/modules/zplugin.zsh
 source $ZDOTDIR/modules/autoloads.zsh
 source $ZDOTDIR/modules/zshctl.zsh
 source $ZDOTDIR/modules/options.zsh

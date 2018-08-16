@@ -1,12 +1,20 @@
-export ZPLG_HOME=$ZDOTDIR/.zplugin
+local -A ZPLGM
+ZPLGM[HOME_DIR]=$ZDOTDIR/zplugin
+
+ZPLGM[BIN_DIR]=${ZPLGM[HOME_DIR]}/bin
+ZPLGM[PLUGIN_DIR]=${ZPLGM[HOME_DIR]}/plugins
+ZPLGM[COMPLETIONS_DIR]=${ZPLGM[HOME_DIR]}/completions
+ZPLGM[SNIPPETS_DIR]=${ZPLGM[HOME_DIR]}/snippets
+ZPFX=${ZPLGM[HOME_DIR]}/polaris
+
 # Check if zplug is installed
-if [[ ! -d $ZPLG_HOME ]]; then
-  mkdir $ZPLG_HOME
-  git clone --depth 10 https://github.com/zdharma/zplugin.git $ZPLG_HOME/bin
-  chmod og-x $ZPLG_HOME
+if [[ ! -d ${ZPLGM[HOME_DIR]} ]]; then
+  mkdir ${ZPLGM[HOME_DIR]}
+  git clone --depth 10 https://github.com/zdharma/zplugin.git ${ZPLGM[HOME_DIR]}/bin
+  chmod og-x ${ZPLGM[HOME_DIR]}
 fi
 
-source $ZPLG_HOME/bin/zplugin.zsh
+source ${ZPLGM[HOME_DIR]}/bin/zplugin.zsh
 autoload -Uz _zplugin
 (( ${+_comps} )) && _comps[zplugin]=_zplugin
 
