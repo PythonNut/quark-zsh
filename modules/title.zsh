@@ -25,7 +25,7 @@ function zsh_settitle() {
       titlestart='\033]30;'
       titlefinish='\007';;
     (screen*|screen)
-      titlestart='\033k'
+      titlestart='\033]2;'
       titlefinish='\033\';;
     (*)
       titlestart=$terminfo[tsl]
