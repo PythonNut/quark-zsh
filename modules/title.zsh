@@ -1,7 +1,7 @@
 integer chpwd_title_manual
 
 # set the title
-function zsh_settitle() {
+function quark-set-title() {
   emulate -LR zsh
 
   if (( $degraded_terminal[title] == 1 )); then
@@ -24,7 +24,7 @@ function zsh_settitle() {
     (konsole)
       titlestart='\033]30;'
       titlefinish='\007';;
-    (screen*|screen)
+    (screen*)
       titlestart='\033]2;'
       titlefinish='\033\';;
     (*)
@@ -44,18 +44,22 @@ function zsh_settitle() {
 function settitle() {
   emulate -LR zsh
   chpwd_title_manual=1
-  zsh_settitle $1
+  quark-set-title $1
   if [[ ! -n $1 ]]; then
     chpwd_title_manual=0
-    zsh_settitle
+    quark-set-title
   fi
 }
 
 function title_async_compress_command () {
   if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
     local cur_command host="" root=" "
+    if [[ -n $TMUX ]]; then
+      # Since TMUX can show the currently running command
+      return 0
+    fi
 
-    if (( $degraded_terminal[display_host] == 1 )) && [[ ! -n $TMUX ]]; then
+    if (( $degraded_terminal[display_host] == 1 )); then
       host="${HOST%%.*} "
     fi
 
@@ -77,7 +81,7 @@ function title_async_compress_command () {
       root=" !"
     fi
 
-    zsh_settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]${root}${cur_command}"
+    quark-set-title "${host}${quark_chpwd_minify_full_str}${quark_chpwd_minify_fasd_str:+→$quark_chpwd_minify_fasd_str}${root}${cur_command}"
   fi
 }
 
@@ -94,7 +98,7 @@ function title_async_compress () {
     if (( $UID == 0 )); then
       root=" !"
     fi
-    zsh_settitle "${host}$chpwd_minify_fast_str [$chpwd_minify_fasd_str]${root}"
+    quark-set-title "${host}${quark_chpwd_minify_full_str}${quark_chpwd_minify_fasd_str:+→$quark_chpwd_minify_fasd_str}${root}"
   fi
 }
 

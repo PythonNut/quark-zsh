@@ -5,13 +5,13 @@ function quark-chpwd-smart-worker {
   }
 
   quark-minify-path-full -r $1
-  local chpwd_minify_full_str=$REPLY
+  local quark_chpwd_minify_full_str=$REPLY
 
-  quark-minify-path-smart -r $chpwd_minify_full_str
-  local chpwd_minify_smart_str=$REPLY
+  quark-minify-path-smart -r $quark_chpwd_minify_full_str
+  local quark_chpwd_minify_smart_str=$REPLY
 
-  typeset -p chpwd_minify_full_str
-  typeset -p chpwd_minify_smart_str
+  typeset -p quark_chpwd_minify_full_str
+  typeset -p quark_chpwd_minify_smart_str
 }
 
 function quark-chpwd-smart-worker-callback {
@@ -68,9 +68,9 @@ function quark-chpwd-fasd-worker {
   }
 
   quark-minify-path-fasd -r $1
-  local chpwd_minify_fasd_str=$REPLY
+  local quark_chpwd_minify_fasd_str=$REPLY
 
-  typeset -p chpwd_minify_fasd_str
+  typeset -p quark_chpwd_minify_fasd_str
 }
 
 function quark-chpwd-fasd-worker-callback {
@@ -126,17 +126,17 @@ function quark-chpwd-async-start {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
   # check if we're running under Midnight Commander
   if (( $degraded_terminal[decorations] == 1 )); then
-    chpwd_minify_smart_str=${${:-.}:A:t}
+    quark_chpwd_minify_smart_str=${${:-.}:A:t}
     zle && zle reset-prompt
   else
-    chpwd_minify_fasd_str=""
+    quark_chpwd_minify_fasd_str=""
 
     quark-minify-path -r .
-    chpwd_minify_fast_str=$REPLY
-    chpwd_minify_full_str=$chpwd_minify_fast_str
+    quark_chpwd_minify_fast_str=$REPLY
+    quark_chpwd_minify_full_str=$quark_chpwd_minify_fast_str
 
-    quark-minify-path-smart -r $chpwd_minify_fast_str
-    chpwd_minify_smart_str=$REPLY
+    quark-minify-path-smart -r $quark_chpwd_minify_fast_str
+    quark_chpwd_minify_smart_str=$REPLY
 
     quark-chpwd-smart-start
     quark-chpwd-fasd-start

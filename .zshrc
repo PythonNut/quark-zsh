@@ -47,8 +47,8 @@ source $ZDOTDIR/modules/vcs.zsh
 source $ZDOTDIR/modules/prompt.zsh
 source $ZDOTDIR/modules/g.zsh
 source $ZDOTDIR/modules/parser.zsh
-source $ZDOTDIR/modules/title.zsh
 source $ZDOTDIR/modules/chpwd.zsh
+source $ZDOTDIR/modules/title.zsh
 source $ZDOTDIR/modules/bindings.zsh
 source $ZDOTDIR/modules/functions.zsh
 

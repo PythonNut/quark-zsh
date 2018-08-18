@@ -85,10 +85,10 @@ function quark-compute-prompt {
   PS1+='%(1j.%{%B%F{yellow}%}%j&%{%F{default}%b%} .)'
 
   # compressed_path
-  PS1+='$chpwd_minify_smart_str'
+  PS1+='$quark_chpwd_minify_smart_str'
 
   # Add teleport shortcut
-  PS1+='${${${PWD:A}/#%(${${:-~}:A}|\/)/}:+${${$(( $#chpwd_minify_fasd_str && $#chpwd_minify_fasd_str <= $#chpwd_minify_smart_str ))%0}:+→${chpwd_minify_fasd_str//(#m) ?/%U${MATCH# }%u}}}'
+  PS1+='${${${PWD:A}/#%(${${:-~}:A}|\/)/}:+${${$(( $#quark_chpwd_minify_fasd_str && $#quark_chpwd_minify_fasd_str <= $#quark_chpwd_minify_smart_str ))%0}:+→${quark_chpwd_minify_fasd_str//(#m) ?/%U${MATCH# }%u}}}'
 
   if (( $degraded_terminal[rprompt] != 1 )); then
     # shell depth
