@@ -46,7 +46,6 @@ function quark-chpwd-smart-worker-reset {
   quark-chpwd-smart-worker-setup
 }
 
-
 function quark-chpwd-smart-worker-timeout {
   quark-error chpwd smart compressor timed out!
   quark-chpwd-smart-worker-reset
@@ -69,7 +68,7 @@ function quark-chpwd-fasd-worker {
   }
 
   quark-minify-path-fasd -r $1
-  local chpwd_minify_fasd_str=$reply
+  local chpwd_minify_fasd_str=$REPLY
 
   typeset -p chpwd_minify_fasd_str
 }
@@ -134,6 +133,7 @@ function quark-chpwd-async-start {
 
     quark-minify-path -r .
     chpwd_minify_fast_str=$REPLY
+    chpwd_minify_full_str=$chpwd_minify_fast_str
 
     quark-minify-path-smart -r $chpwd_minify_fast_str
     chpwd_minify_smart_str=$REPLY
