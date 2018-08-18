@@ -24,7 +24,7 @@ function quark-chpwd-smart-worker-callback {
 
   float -g quark_chpwd_smart_duration=$4
   zle && zle reset-prompt
-  title_async_compress
+  quark-title-sync
 }
 
 function quark-chpwd-smart-worker-check {
@@ -83,7 +83,7 @@ function quark-chpwd-fasd-worker-callback {
 
   float -g quark_chpwd_fasd_duration=$4
   zle && zle reset-prompt
-  title_async_compress
+  quark-title-sync
 }
 
 function quark-chpwd-fasd-worker-check {

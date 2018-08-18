@@ -40,7 +40,7 @@ function quark-set-title() {
   print -Pn "${(%)titlestart}${(q)*}${(%)titlefinish}"
 }
 
-# if title set manually, dont set automatically
+# if title set manually, don't set automatically
 function settitle() {
   emulate -LR zsh
   chpwd_title_manual=1
@@ -51,56 +51,50 @@ function settitle() {
   fi
 }
 
-function title_async_compress_command () {
-  if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
-    local cur_command host="" root=" "
-    if [[ -n $TMUX ]]; then
-      # Since TMUX can show the currently running command
-      return 0
-    fi
-
-    if (( $degraded_terminal[display_host] == 1 )); then
-      host="${HOST%%.*} "
-    fi
-
-    # strip off environment variables
-    1=${1##([^[:ident:]]##=[[:graph:]]#[[:space:]]#)#}
-
-    if [[ $1 == *sudo* ]]; then
-      cur_command=\!${${1##[[:space:]]#sudo[[:space:]]#}%%[[:space:]]*}
-    elif [[ $1 == [[:space:]]#(noglob|nocorrect|time|builtin|command|exec)* ]]; then
-      cur_command=${${1##[[:space:]]#[^[:space:]]#[[:space:]]#}%%[[:space:]]*}
-    else
-      cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
-    fi
-
-    # strip off leading punctuation (like alias escapes)
-    cur_command=${cur_command##[[:punct:]]#}
-
-    if (( $UID == 0 )); then
-      root=" !"
-    fi
-
-    quark-set-title "${host}${quark_chpwd_minify_full_str}${quark_chpwd_minify_fasd_str:+→$quark_chpwd_minify_fasd_str}${root}${cur_command}"
+function quark-title-extract-command {
+  local cur_command host root
+  if (( $degraded_terminal[display_host] == 1 )); then
+    host="${HOST%%.*} "
   fi
+
+  # strip off environment variables
+  1=${1##([^[:ident:]]##=[[:graph:]]#[[:space:]]#)#}
+
+  if [[ $1 == *sudo* ]]; then
+    cur_command=\!${${1##[[:space:]]#sudo[[:space:]]#}%%[[:space:]]*}
+  elif [[ $1 == [[:space:]]#(noglob|nocorrect|time|builtin|command|exec)* ]]; then
+    cur_command=${${1##[[:space:]]#[^[:space:]]#[[:space:]]#}%%[[:space:]]*}
+  else
+    cur_command=${${1##[[:space:]]#}%%[[:space:]]*}
+  fi
+
+  # strip off leading punctuation (like alias escapes)
+  cur_command=${cur_command##[[:punct:]]#}
+
+  if (( $UID == 0 )); then
+    root=" !"
+  fi
+  REPLY=${root}${cur_command}
 }
 
-add-zsh-hook preexec title_async_compress_command
-
-function title_async_compress () {
+function quark-title-sync () {
   if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
-    local host="" root=""
-
+    local command
     if (( $degraded_terminal[display_host] == 1 )) && [[ ! -n $TMUX ]] ; then
       host="${HOST%%.*} "
     fi
-
-    if (( $UID == 0 )); then
-      root=" !"
+    if [[ -n $1 ]]; then
+      quark-title-extract-command $1
+      command=$REPLY
     fi
-    quark-set-title "${host}${quark_chpwd_minify_full_str}${quark_chpwd_minify_fasd_str:+→$quark_chpwd_minify_fasd_str}${root}"
+    quark-set-title "${host}${quark_chpwd_minify_full_str}${quark_chpwd_minify_fasd_str:+→$quark_chpwd_minify_fasd_str}${root}${command:+ ${command}}"
   fi
 }
 
-add-zsh-hook precmd title_async_compress
-title_async_compress
+# Since TMUX can show the currently running command
+if [[ -z $TMUX ]]; then
+  add-zsh-hook preexec quark-title-sync
+fi
+
+add-zsh-hook precmd quark-title-sync
+quark-title-sync
