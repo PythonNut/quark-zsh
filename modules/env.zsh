@@ -78,8 +78,8 @@ degraded_terminal=(
   display_host 0
 )
 
-export _OLD_TERM=$TERM
-case $_OLD_TERM in
+QUARK_OLD_TERM=$TERM
+case $QUARK_OLD_TERM in
   (linux|vt100)
     degraded_terminal[colors256]=1
     degraded_terminal[unicode]=1;;
