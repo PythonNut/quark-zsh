@@ -128,6 +128,7 @@ fi
 
 if [[ $_ZSH_OSRELEASE == *Microsoft* && -z $DISPLAY ]]; then
   degraded_terminal[unicode]=1
+  setopt nobgnice
 fi
 
 if [[ -n $TMUX && -n $SSH_CLIENT ]]; then
