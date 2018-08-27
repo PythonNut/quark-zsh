@@ -87,7 +87,7 @@ function quark-title-sync () {
       quark-title-extract-command $1
       command=$REPLY
     fi
-    quark-set-title "${host}${quark_chpwd_minify_full_str}${quark_chpwd_minify_fasd_str:+→$quark_chpwd_minify_fasd_str}${root}${command:+ ${command}}"
+    quark-set-title "${host}${quark_chpwd_minify_full_str#\~/}${quark_chpwd_minify_fasd_str:+→$quark_chpwd_minify_fasd_str}${root}${command:+ ${command}}"
   fi
 }
 
