@@ -238,6 +238,10 @@ function quark-vcs-worker-timeout {
 
 function quark-vcs-start {
   async_job quark_vcs_worker quark-vcs-worker ${${:-.}:A}
+
+  sched +1 quark-vcs-worker-check
+  sched +9 quark-vcs-worker-check
+
   sched +10 quark-vcs-worker-timeout
 }
 
