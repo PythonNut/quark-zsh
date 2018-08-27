@@ -36,7 +36,7 @@ function quark-accept-line() {
 
   # expand all aliases on return
   if [[ $#RBUFFER == 0 ]]; then
-    expand_alias no_space
+    quark-expand-alias no_space
   fi
   
   # ignore prefix commands

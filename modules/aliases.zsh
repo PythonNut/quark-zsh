@@ -255,11 +255,11 @@ fi
 # ==============
 
 # expand aliases on space
-function expand_alias() {
+function quark-expand-alias {
   emulate -LR zsh -o hist_subst_pattern -o extended_glob
   {
     # hack a local function scope using unfuction
-    function expand_alias_smart_space () {
+    function quark-expand-alias-smart-space {
       if [[ $RBUFFER[1] != ' ' ]]; then
         zle magic-space
       else
@@ -273,7 +273,7 @@ function expand_alias() {
       fi
     }
 
-    function expand_alias_smart_expand () {
+    function quark-alias-smart-expand {
       zparseopts -D -E g=G
       local expansion="${@[2,-1]}"
       local delta=$(($#expansion - $expansion[(i){}] - 1))
@@ -304,10 +304,10 @@ function expand_alias() {
     local -a cmd
     cmd=(${(@s/;/)LBUFFER:gs/[^\\[:IDENT:]]/;})
     if [[ -n "$command_abbrevs[$cmd[-1]]" && $#cmd == 1 ]]; then
-      expand_alias_smart_expand $cmd[-1] "$(${=${(e)command_abbrevs[$cmd[-1]]}})"
+      quark-alias-smart-expand $cmd[-1] "$(${=${(e)command_abbrevs[$cmd[-1]]}})"
 
     elif [[ -n "$global_abbrevs[$cmd[-1]]" ]]; then
-      expand_alias_smart_expand -g $cmd[-1] "$(${=${(e)global_abbrevs[$cmd[-1]]}})"
+      quark-alias-smart-expand -g $cmd[-1] "$(${=${(e)global_abbrevs[$cmd[-1]]}})"
 
     elif [[ "${(j: :)cmd}" == *\!* ]] && alias "$cmd[-1]" &>/dev/null; then
       if [[ -n "$aliases[$cmd[-1]]" ]]; then
@@ -316,22 +316,22 @@ function expand_alias() {
       
     elif [[ "$+expand[(r)$cmd[-1]]" != 1 && "$cmd[-1]" != (\\|\"|\')* ]]; then
       zle _expand_alias
-      expand_alias_smart_space "$1"
+      quark-expand-alias-smart-space "$1"
       
     else
-      expand_alias_smart_space "$1"
+      quark-expand-alias-smart-space "$1"
     fi
 
   } always {
-    unfunction "expand_alias_smart_space" "expand_alias_smart_expand"
+    unfunction "quark-expand-alias-smart-space" "quark-alias-smart-expand"
   }
 
   _zsh_highlight 2>/dev/null
 }
 
-zle -N expand_alias
+zle -N quark-expand-alias
 
-global_bindkey " " expand_alias
+global_bindkey " " quark-expand-alias
 global_bindkey "^ " magic-space
 bindkey -M isearch " " magic-space
 
