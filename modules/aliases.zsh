@@ -292,8 +292,8 @@ function quark-expand-alias {
     for param in $region_highlight; do
       if [[ $param == (#b)[^0-9]#(<->)[^0-9]##(<->)[[:space:]]#(*) ]]; then
         if (($match[2] - $match[1] > 0 && $match[1] > 1)); then
-          if [[ $match[3] == ${ZSH_HIGHLIGHT_STYLES[double-quoted-argument]} ||
-                $match[3] == ${ZSH_HIGHLIGHT_STYLES[single-quoted-argument]} ]]; then
+          if [[ $match[3] == ${FAST_HIGHLIGHT_STYLES[double-quoted-argument]} ||
+                $match[3] == ${FAST_HIGHLIGHT_STYLES[single-quoted-argument]} ]]; then
             zle magic-space
             return
           fi
