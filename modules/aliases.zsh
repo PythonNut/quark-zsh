@@ -128,9 +128,10 @@ if (( $+commands[sudo] )); then
   alias -E sudo='nocorrect sudo '
 fi
 
-function alias_create_please_command {
+function quark-alias-create-please-command {
   emulate -LR zsh -o extended_glob
-  if [[ $(detect_sudo_type) == none ]]; then
+  quark-detect-sudo-type
+  if [[ $REPLY == none ]]; then
     local cmdline="${history[$#history]##[[:space:]]#}"
     local -i alias_found
     local exp
@@ -142,7 +143,7 @@ function alias_create_please_command {
       alias_found=0
       for als in ${(k)aliases}; do
         if [[ $cmdline = ${als}* ]] && ! (( ${+expanded[(r)$als]} )); then
-        expanded+=${als#\\}
+          expanded+=${als#\\}
           exp=$aliases[$als]
           cmdline="${cmdline/#(#m)${als}[^[:IDENT:]]/$exp${MATCH##[[:IDENT:]]#}}"
           cmdline=${cmdline##[[:space:]]#}
@@ -161,7 +162,7 @@ function alias_create_please_command {
   fi
 }
 
-alias -ec please='alias_create_please_command'
+alias -ec please='quark-alias-create-please-command'
 
 # yaourt aliases
 if (( $+commands[yaourt] )); then

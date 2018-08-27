@@ -179,18 +179,4 @@ dirstack=(${(u@Q)${(f@)mapfile[$ZDOTDIR/zdirs]}})
 zstyle ':completion:*:cdr:*' verbose true
 zstyle ':completion:*:cdr:*' extra-verbose true
 
-# ===========
-# Detect sudo
-# ===========
-
-function detect_sudo_type {
-  if sudo -n true &> /dev/null; then
-    echo passwordless
-  elif [[ $(sudo -vS < /dev/null 2>&1) == (*password*|*askpass*) ]]; then
-    echo passworded
-  else
-    echo none
-  fi
-}
-
 BORING_USERS=(pythonnut pi)

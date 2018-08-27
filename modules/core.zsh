@@ -80,3 +80,14 @@ function quark-strlen {
   local subbed=${(%%)plain}
   echo $#subbed
 }
+
+function quark-detect-sudo-type {
+  emulate -LR zsh
+  if sudo -n true &> /dev/null; then
+      REPLY=passwordless
+  elif [[ $(sudo -vS < /dev/null 2>&1) == (*password*|*askpass*) ]]; then
+      REPLY=passworded
+  else
+      REPLY=none
+  fi
+}
