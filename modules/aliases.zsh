@@ -243,7 +243,11 @@ fi
 if (( $+commands[emacsclient] )); then
   alias emacsd="g emacs --daemon"
   alias emacsdk="emacsclient -e '(kill-emacs)'"j
-  alias -E e='emacsclient -n -q -a $EDITOR'
+
+  function e {
+    emacsclient -n -q -a $EDITOR ${@}
+    quark-switch-focus-by-name emacs
+  }
 fi
 
 if (( $+commands[ranger] )); then

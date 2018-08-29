@@ -91,3 +91,32 @@ function quark-detect-sudo-type {
       REPLY=none
   fi
 }
+
+function quark-switch-focus-by-name {
+  if ! (( $+commands[wmctrl] && $+commands[pgrep] )); then
+      return
+  fi
+
+  local -a pids=($(pgrep $1))
+  local -a windows=("${(f)$(wmctrl -lp)}")
+  local -a line
+  local window_id
+
+  if (( ${#pids} == 0)); then
+      return
+  fi
+
+  for window in $windows; do
+    line=(${(s/ /)window})
+    if (( ${pids[(I)${line[3]}]} )); then
+        window_id=${line[1]}
+        break
+    fi
+  done
+
+  if [[ -z $window_id ]]; then
+      return
+  fi
+
+  wmctrl -ia $window_id
+}
