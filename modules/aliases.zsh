@@ -59,6 +59,14 @@ alias -E egrep='nocorrect \egrep --line-buffered --color=auto'
 
 # cd aliases
 alias -- -='cd -'
+alias -- --='cd -2'
+alias -- ---='cd -3'
+alias -- ----='cd -4'
+alias -- -----='cd -5'
+alias -- ------='cd -6'
+alias -- -------='cd -7'
+alias -- --------='cd -8'
+alias -- ---------='cd -9'
 
 # ls aliases
 if (( $+commands[exa] )); then
