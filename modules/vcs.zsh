@@ -199,7 +199,7 @@ function quark-vcs-worker-callback {
   vcs_info_msg_0_=$vcs_super_info
   vcs_raw_data=($vcs_super_raw_data)
 
-  zle reset-prompt
+  zle && zle reset-prompt
 
   # if we're in a vcs, start an inotify process
   if [[ $current_pwd/ != $vcs_last_root/* ]]; then
