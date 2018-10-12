@@ -57,9 +57,9 @@ if (( $degraded_terminal[display_host] == 1 )); then
       QUARK_PROMPT_HOSTNAME="%F{$((0x${$(echo ${HOST%%.*} |md5):1:2}))}"
     fi
     if [[ -n $PROMPT_HOSTNAME_FULL ]]; then
-      PROMPT_HOSTNAME+="@${HOST}%k%f"
+      QUARK_PROMPT_HOSTNAME+="@${HOST}%k%f"
     else
-      PROMPT_HOSTNAME+="@${HOST:0:3}%k%f"
+      QUARK_PROMPT_HOSTNAME+="@${HOST:0:3}%k%f"
     fi
   fi
 fi
