@@ -11,11 +11,11 @@ autoload -Uz bracketed-paste-magic
 zle -N bracketed-paste bracketed-paste-magic
 
 function quark-echotc {
-  TERM=$QUARK_OLD_TERM echotc $@
+  TERM=$QUARK_OLD_TERM echotc $@ 2> /dev/null
 }
 
 function quark-echoti {
-  TERM=$QUARK_OLD_TERM echoti $@
+  TERM=$QUARK_OLD_TERM echoti $@ 2> /dev/null
 }
 
 function quark-protect-state-zle-line-init {
