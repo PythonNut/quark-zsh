@@ -42,8 +42,7 @@ function quark-chpwd-smart-worker-cleanup {
 }
 
 function quark-chpwd-smart-worker-reset {
-  quark-chpwd-smart-worker-cleanup
-  quark-chpwd-smart-worker-setup
+  async_flush_jobs quark_chpwd_smart_worker
 }
 
 function quark-chpwd-smart-worker-timeout {
@@ -101,8 +100,7 @@ function quark-chpwd-fasd-worker-cleanup {
 }
 
 function quark-chpwd-fasd-worker-reset {
-  quark-chpwd-fasd-worker-cleanup
-  quark-chpwd-fasd-worker-setup
+  async_flush_jobs quark_chpwd_fasd_worker
 }
 
 quark-chpwd-fasd-worker-setup

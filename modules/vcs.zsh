@@ -224,8 +224,7 @@ function quark-vcs-worker-cleanup {
 }
 
 function quark-vcs-worker-reset {
-  quark-vcs-worker-cleanup
-  quark-vcs-worker-setup
+  async_flush_jobs quark_vcs_worker
 }
 
 quark-vcs-worker-setup
