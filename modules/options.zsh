@@ -48,8 +48,6 @@
   setopt hist_no_store          # don't store history commands
   setopt hist_expire_dups_first # kill the dups! kill the dups!
   setopt hist_verify            # verify history expansions
-  setopt csh_junkie_history     # single instead of dual bang
-  setopt bang_hist              # make ! a special character
 
   # i/o and syntax
   setopt multios                # redirect to globs!
