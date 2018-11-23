@@ -25,11 +25,11 @@ echo -n > $ZDOTDIR/startup.log
 setopt function_argzero
 
 source $ZDOTDIR/modules/core.zsh
-source $ZDOTDIR/modules/zplugin.zsh
 source $ZDOTDIR/modules/autoloads.zsh
+source $ZDOTDIR/modules/env.zsh
+source $ZDOTDIR/modules/zplugin.zsh
 source $ZDOTDIR/modules/zshctl.zsh
 source $ZDOTDIR/modules/options.zsh
-source $ZDOTDIR/modules/env.zsh
 if [[ -f $ZDOTDIR/local/early.zsh ]]; then
   source $ZDOTDIR/local/early.zsh
 fi
