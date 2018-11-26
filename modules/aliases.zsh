@@ -172,8 +172,13 @@ function quark-alias-create-please-command {
 
 alias -ec please='quark-alias-create-please-command'
 
-# yaourt aliases
-if (( $+commands[yaourt] )); then
+# yay/yaourt aliases
+if (( $+commands[yay] )); then
+  alias y='yay'
+  alias yi='yay -S'
+  alias yu='yay -Syu --noconfirm'
+
+elif (( $+commands[yaourt] )); then
   alias y='yaourt'
   alias yi='yaourt -Sa'
   alias yr='yaourt -Rs'
