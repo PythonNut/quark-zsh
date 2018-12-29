@@ -17,6 +17,11 @@ function quark-chpwd-smart-worker {
 function quark-chpwd-smart-worker-callback {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
 
+  if [[ $5 == quark_chpwd_smart_worker:zle\ -F*returned\ error* ]]; then
+    quark-chpwd-smart-worker-setup
+    return
+  fi
+
   quark-sched-remove quark-chpwd-smart-worker-timeout
   quark-sched-remove quark-chpwd-smart-worker-check
 
@@ -78,6 +83,11 @@ function quark-chpwd-fasd-worker {
 
 function quark-chpwd-fasd-worker-callback {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
+
+  if [[ $5 == quark_chpwd_fasd_worker:zle\ -F*returned\ error* ]]; then
+    quark-chpwd-fasd-worker-setup
+    return
+  fi
 
   quark-sched-remove quark-chpwd-fasd-worker-timeout
   quark-sched-remove quark-chpwd-fasd-worker-check
