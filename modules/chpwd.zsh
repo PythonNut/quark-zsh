@@ -23,7 +23,11 @@ function quark-chpwd-smart-worker-callback {
   quark-eval-overriding-globals $3
 
   float -g quark_chpwd_smart_duration=$4
-  zle && zle reset-prompt
+
+  if (( $6 == 0 )); then
+    zle && zle reset-prompt
+  fi
+
   quark-title-sync
 }
 
@@ -81,7 +85,11 @@ function quark-chpwd-fasd-worker-callback {
   quark-eval-overriding-globals $3
 
   float -g quark_chpwd_fasd_duration=$4
-  zle && zle reset-prompt
+
+  if (( $6 == 0 )); then
+    zle && zle reset-prompt
+  fi
+
   quark-title-sync
 }
 
