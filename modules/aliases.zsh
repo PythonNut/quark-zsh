@@ -106,6 +106,7 @@ alias :q='exit'
 alias exi='exit'
 alias locate='\locate -ib'
 alias -E exit=' exit'
+alias errcho='>&2 echo'
 
 # suppression aliases
 alias -E man='nocorrect noglob \man'
