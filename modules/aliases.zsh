@@ -85,7 +85,8 @@ fi
 
 # safety aliases
 alias rm='rm -i'
-alias -E cp='nocorrect cp'
+alias -E cp='nocorrect \cp -i'
+alias -E mv='\mv -i'
 alias ln="\ln -s"
 
 # global aliases
