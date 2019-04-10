@@ -55,7 +55,12 @@ else
   alias lsa='\ls --color --group-directories-first'
   alias -E lst=" lsa -I '"${BORING_FILES//\|/\' -I \'}"'"
 fi
-alias -E egrep='nocorrect \egrep --line-buffered --color=auto'
+
+if (( $+commands[gegrep] )); then
+  alias -E egrep='nocorrect \gegrep --line-buffered --color=auto'
+else
+  alias -E egrep='nocorrect \egrep --line-buffered --color=auto'
+fi
 
 # cd aliases
 alias -- -='cd -'
