@@ -24,5 +24,6 @@
   zmodload zsh/terminfo            # terminal parameters from terminfo
   zmodload zsh/complist            # various completion functions
   zmodload zsh/mapfile             # read files directly
-  
+  zmodload -F zsh/stat b:zstat     # get stat info natively
+
 } &>> $ZDOTDIR/startup.log
