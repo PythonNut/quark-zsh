@@ -106,9 +106,14 @@ alias df='\df -h'
 alias ping='\ping -c 10'
 alias :q='exit'
 alias exi='exit'
-alias locate='\locate -ib'
 alias -E exit=' exit'
 alias errcho='>&2 echo'
+
+if (( $+commands[glocate] )); then
+  alias locate='\glocate -ib'
+else
+  alias locate='\locate -ib'
+fi
 
 # suppression aliases
 alias -E man='nocorrect noglob \man'
