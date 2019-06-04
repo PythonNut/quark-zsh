@@ -23,6 +23,10 @@ zplugin light zdharma/fast-syntax-highlighting
 
 zplugin ice blockf
 zplugin light zsh-users/zsh-completions
+zplugin ice as"completion"
+zplugin light esc/conda-zsh-completion
+autoload _conda
+compdef _conda conda
 
 zplugin light yonchu/zsh-vcs-prompt
 
