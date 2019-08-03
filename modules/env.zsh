@@ -2,22 +2,6 @@
 # Environment
 # ===========
 
-# check if user has root privileges
-integer user_has_root
-function {
-  if (( $UID == 0 )); then
-    echo Warning! This user has root privileges.
-    user_has_root=1
-  fi
-}
-
-HISTFILE=$ZDOTDIR/.histfile
-HISTSIZE=50000
-SAVEHIST=50000
-
-# Forcefully disable the bell
-ZBEEP=""
-
 if (( $+commands[nvim] )); then
   export EDITOR="nvim"
 elif (( $+commands[gvim] )); then
@@ -32,7 +16,6 @@ elif (( $+commands[nano] )); then
   export EDITOR="nano"
 fi
 
-export REPORTTIME=10
 export SAGE_STARTUP_FILE=~/.sage/init.sage
 export PATH
 
@@ -54,12 +37,10 @@ path+=(
   ~/bin
   ~/usr/bin
   ~/.local/bin
+  ~/.cargo/bin
 )
 
 path=( ${(u)^path:A}(N-/) )
-
-NULLCMD="cat"
-READNULLCMD="less"
 
 # =================
 # Terminal handling
@@ -158,25 +139,3 @@ fi
 
 colors
 
-# ==========================
-# Persistent directory stack
-# ==========================
-
-autoload -Uz chpwd_recent_dirs cdr
-add-zsh-hook chpwd chpwd_recent_dirs
-
-zstyle ':chpwd:*' recent-dirs-max 100
-zstyle ':chpwd:*' recent-dirs-default true
-zstyle ':chpwd:*' recent-dirs-pushd true
-zstyle ':chpwd:*' recent-dirs-file "$ZDOTDIR/zdirs"
-
-if [[ ! -f $ZDOTDIR/scp: ]]; then
-  touch $ZDOTDIR/zdirs
-fi
-
-dirstack=(${(u@Q)${(f@)mapfile[$ZDOTDIR/zdirs]}})
-
-zstyle ':completion:*:cdr:*' verbose true
-zstyle ':completion:*:cdr:*' extra-verbose true
-
-BORING_USERS=(pythonnut pi)

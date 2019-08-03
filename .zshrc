@@ -1,6 +1,5 @@
 #!/bin/zsh
 
-
 # disable traps until we define them later
 TRAPUSR1(){ echo "USR1 called before init!" }
 TRAPUSR2(){ echo "USR2 called before init!" }
@@ -10,22 +9,36 @@ if [[ ! -d $ZDOTDIR ]]; then
     mkdir -p $ZDOTDIR
 fi
 
+ZPROFILE=$ZDOTDIR/.zprofile
+
+if [[ -f $ZPROFILE ]]; then
+    source $ZPROFILE
+fi
+
 zstyle :compinstall filename '~/.zshrc'
 skip_global_compinit=1
 fpath=($ZDOTDIR/completers $fpath)
 autoload -Uz compinit && compinit -d $ZDOTDIR/zcompdump
 echo -n > $ZDOTDIR/startup.log
-setopt function_argzero
 
 source $ZDOTDIR/modules/core.zsh
-source $ZDOTDIR/modules/autoloads.zsh
 source $ZDOTDIR/modules/env.zsh
 source $ZDOTDIR/modules/zplugin.zsh
-source $ZDOTDIR/modules/zshctl.zsh
-source $ZDOTDIR/modules/options.zsh
+
 if [[ -f $ZDOTDIR/local/early.zsh ]]; then
   source $ZDOTDIR/local/early.zsh
 fi
+
+# If not running interactively, try to be as straightforward as
+# possible.
+if [[ $- != *i* || ! -t 0 ]]; then
+    emulate -LR sh
+    PS1="$ "
+    return
+fi
+
+source $ZDOTDIR/modules/options.zsh
+source $ZDOTDIR/modules/zshctl.zsh
 source $ZDOTDIR/modules/fasd.zsh
 source $ZDOTDIR/modules/auto_fu.zsh
 source $ZDOTDIR/modules/term.zsh
