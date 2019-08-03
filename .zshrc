@@ -1,12 +1,5 @@
 #!/bin/zsh
 
-# If not running interactively, try to be as straightforward as
-# possible.
-if [[ $- != *i* || ! -t 0 ]]; then
-    emulate -LR sh
-    PS1="$ "
-    return
-fi
 
 # disable traps until we define them later
 TRAPUSR1(){ echo "USR1 called before init!" }
