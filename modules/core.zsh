@@ -1,4 +1,3 @@
-typeset -F SECONDS
 
 function quark-error {
   echo error: $@ >> $ZDOTDIR/startup.log
@@ -37,12 +36,14 @@ function quark-with-timeout {
   emulate -LR zsh -o no_monitor
   local stat_reply
   local -F time_limit=$1
+  # This also resets $SECONDS to 0, locally
+  local -F SECONDS
   shift
   (eval $@) &
   # TODO: /proc probably isn't portable
   zstat -A stat_reply '+mtime' /proc/$!
 
-  local PID=$! START_TIME=$SECONDS MTIME=${stat_reply[1]}
+  local PID=$! MTIME=${stat_reply[1]}
   while true; do
     sleep 0.001
     if [[ ! -d /proc/$PID ]]; then
@@ -52,7 +53,7 @@ function quark-with-timeout {
     if [[ ${stat_reply[1]} != $MTIME ]]; then
         break
     fi
-    if (( $SECONDS - $START_TIME > $time_limit )); then
+    if (( $SECONDS > $time_limit )); then
         {
           kill $PID
           wait $PID
