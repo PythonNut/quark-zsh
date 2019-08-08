@@ -112,6 +112,10 @@ if [[ $_ZSH_OSRELEASE == *Microsoft* && -z $DISPLAY ]]; then
   setopt nobgnice
 fi
 
+if [[ $INSIDE_EMACS == vterm ]]; then
+  degraded_terminal[unicode]=1
+fi
+
 if [[ -n $TMUX && -n $SSH_CLIENT ]]; then
   degraded_terminal[display_host]=1
 elif [[ $_ZSH_PARENT_CMDLINE == (sshd*|*/sshd|mosh-server*) ]]; then
