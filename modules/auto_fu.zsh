@@ -83,6 +83,7 @@ zstyle ':auto-fu:var' autoable-function/skiplbuffers \
        '?(sudo*)+([[:space:]\\])dnf+([[:space:]])*install+([[:space:]])*' \
        '?(sudo*)+([[:space:]\\])yum+([[:space:]])*install+([[:space:]])*' \
        '*([[:space:]\\])brew+([[:space:]])*' \
+       '*([[:space:]\\])yay+([[:space:]])*' \
        '*([[:space:]\\])curl+([[:space:]])*' \
        '?(sudo*)+([[:space:]\\])yaourt+([[:space:]])*' \
        '?(sudo*)+([[:space:]\\])pacman+([[:space:]])*' \
