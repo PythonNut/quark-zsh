@@ -52,3 +52,54 @@ zplugin light mafredri/zsh-async
 zplugin ice wait'0' atload'_zsh_autosuggest_start' lucid
 zplugin light PythonNut/zsh-autosuggestions
 zplugin light willghatch/zsh-hooks
+
+AUTOPAIR_INHIBIT_INIT=1
+zplugin light hlissner/zsh-autopair
+
+autopair-init() {
+    zle -N autopair-insert
+    zle -N autopair-close
+    zle -N autopair-delete
+
+    local p
+    for p in ${(@k)AUTOPAIR_PAIRS}; do
+        bindkey -M afu "$p" autopair-insert
+        bindkey -M isearch "$p" self-insert
+
+        local rchar="$(_ap-get-pair $p)"
+        if [[ $p != $rchar ]]; then
+          bindkey -M afu "$rchar" autopair-close
+          bindkey -M isearch "$rchar" self-insert
+        fi
+    done
+
+    bindkey -M afu "^?" autopair-delete
+    bindkey -M afu "^h" autopair-delete
+    bindkey -M isearch "^?" backward-delete-char
+    bindkey -M isearch "^h" backward-delete-char
+}
+
+autopair-init
+
+autopair-insert() {
+    local rchar="$(_ap-get-pair $KEYS)"
+    if [[ $KEYS == (\'|\"|\`| ) ]] && _ap-can-skip-p $KEYS $rchar; then
+      zle forward-char
+    elif _ap-can-pair-p; then
+      _ap-self-insert $KEYS $rchar
+    elif [[ $rchar == " " ]]; then
+      zle ${AUTOPAIR_SPC_WIDGET:-self-insert}
+    else
+        zle self-insert
+    fi
+    _zsh_highlight
+}
+
+autopair-close() {
+    if _ap-can-skip-p "$(_ap-get-pair "" $KEYS)" $KEYS; then
+      zle forward-char
+    else
+        zle self-insert
+    fi
+    _zsh_highlight
+}
