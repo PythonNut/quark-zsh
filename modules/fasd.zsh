@@ -3,7 +3,7 @@
 # =================================
 
 export _FASD_DATA=$ZDOTDIR/data/.fasd
-export _FASD_SHIFT=(nocorrect noglob)
+export _FASD_SHIFT=(nocorrect noglob sudo busybox)
 export _FASD_FUZZY=100
 export _FASD_VIMINFO=~/.vim/.viminfo
 
