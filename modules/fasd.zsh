@@ -2,7 +2,7 @@
 # FASD - all kinds of teleportation
 # =================================
 
-export _FASD_DATA=$ZDOTDIR/.fasd
+export _FASD_DATA=$ZDOTDIR/data/.fasd
 export _FASD_SHIFT=(nocorrect noglob)
 export _FASD_FUZZY=100
 export _FASD_VIMINFO=~/.vim/.viminfo
