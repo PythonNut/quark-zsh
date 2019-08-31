@@ -2,18 +2,19 @@
 # AutoFU continuous completions
 # =============================
 
+quark_option_list+=auto-fu
 
 function {
   emulate -LR zsh
-  integer -g afu_enabled=1
   integer -g afu_menu=1
 
   function quark-auto-fu-zle-line-init {
     local nesting=${(%%)${:-%^}}
-    if [[ -z $nesting ]] && (( $afu_enabled == 1 )); then
+    if [[ -z $nesting ]] && [[ -n $quark_options[auto-fu] ]]; then
       auto-fu-init
     fi
   }
+
   hooks-add-hook zle_line_init_hook quark-auto-fu-zle-line-init
 
   zstyle ":auto-fu:var" postdisplay ""

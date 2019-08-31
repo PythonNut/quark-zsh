@@ -46,7 +46,7 @@ else
 fi
 
 QUARK_PROMPT_HOSTNAME=
-QUARK_PROMPT_KEYMAP=
+QUARK_PROMPT_KEYMAP=main
 
 if (( $degraded_terminal[display_host] == 1 )); then
   if (( $degraded_terminal[colors256] != 1 )); then
