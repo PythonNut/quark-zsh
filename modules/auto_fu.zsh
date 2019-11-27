@@ -105,3 +105,5 @@ bindkey -M afu "^[[1;3C" forward-word
 bindkey -M afu "^[[1;3D" backward-word
 bindkey -M afu "^[[1;5C" forward-word
 bindkey -M afu "^[[1;5D" backward-word
+
+global_bindkey "^[ " autosuggest-accept
