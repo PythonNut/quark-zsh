@@ -2,6 +2,8 @@
 # Prompt
 # ======
 
+QUARK_BORING_USERS=(pythonnut pi jhayase)
+
 QUARK_SIGNAL_NAME=
 typeset -A QUARK_ERROR_CODE_SIGNAL_MAP=(
     [129]=HUP
@@ -72,7 +74,7 @@ function quark-compute-prompt {
   PS1+=$'%{%B%F{red}%}%(?..↪ %?${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]:+:${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]}}\n)%{%b%F{default}%}'
 
   # user (highlight root in red)
-  if [[ -z $BORING_USERS[(R)$USER] ]]; then
+  if [[ -z $QUARK_BORING_USERS[(R)$USER] ]]; then
     PS1+='%{%F{default}%}%B%{%(!.%F{red}.%F{black})%}%n'
   fi
 

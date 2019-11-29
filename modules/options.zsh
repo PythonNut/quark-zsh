@@ -107,5 +107,3 @@ dirstack=(${(u@Q)${(f@)mapfile[$ZDOTDIR/zdirs]}})
 
 zstyle ':completion:*:cdr:*' verbose true
 zstyle ':completion:*:cdr:*' extra-verbose true
-
-BORING_USERS=(pythonnut pi)
