@@ -26,6 +26,18 @@ function quark-error {
   echo error: $@ >> $ZDOTDIR/startup.log
 }
 
+function quark-warn {
+  echo warn: $@ >> $ZDOTDIR/startup.log
+}
+
+function quark-info {
+  echo info: $@ >> $ZDOTDIR/startup.log
+}
+
+function quark-debug {
+  echo debug: $@ >> $ZDOTDIR/startup.log
+}
+
 function quark-with-protected-return-code {
   local return=$?
   "$@"
