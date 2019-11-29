@@ -20,22 +20,27 @@ zmodload zsh/mathfunc            # mathematical functions in zsh
 zmodload zsh/terminfo            # terminal parameters from terminfo
 zmodload zsh/complist            # various completion functions
 zmodload zsh/mapfile             # read files directly
+zmodload zsh/datetime            # date and time helpers
 zmodload -F zsh/stat b:zstat     # get stat info natively
 
+function quark-log {
+  echo $EPOCHREALTIME $@ >> $ZDOTDIR/startup.log
+}
+
 function quark-error {
-  echo error: $@ >> $ZDOTDIR/startup.log
+    quark-log "[ERROR]" $@
 }
-
-function quark-warn {
-  echo warn: $@ >> $ZDOTDIR/startup.log
-}
-
 function quark-info {
-  echo info: $@ >> $ZDOTDIR/startup.log
+    quark-log "[INFO]" $@
 }
-
+function quark-warn {
+    quark-log "[WARN]" $@
+}
 function quark-debug {
-  echo debug: $@ >> $ZDOTDIR/startup.log
+    quark-log "[DEBUG]" $@
+}
+function quark-error {
+    quark-log "[ERROR]" $@
 }
 
 function quark-with-protected-return-code {
