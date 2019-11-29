@@ -73,6 +73,10 @@ function zshctl () {
       fi
       ;;
 
+    (log)
+      cat $ZDOTDIR/startup.log
+      ;;
+
     (*)
       echo "Unrecognized subcommand \"${1}\"."
       return 1
