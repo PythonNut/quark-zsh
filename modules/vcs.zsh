@@ -166,10 +166,6 @@ function quark-vcs-worker {
   local vcs_root_dir
   local -a vcs_super_raw_data
 
-  function TRAPTERM {
-    kill -INT $$
-  }
-
   builtin cd $1
   vcs_current_pwd=$1
   vcs_super_info="$(vcs_super_info)"

@@ -1,8 +1,5 @@
 function quark-chpwd-smart-worker {
   emulate -LR zsh
-  function TRAPTERM {
-    kill -INT $$
-  }
 
   quark-minify-path-full -r $1
   local quark_chpwd_minify_full_str=$REPLY
@@ -71,9 +68,6 @@ function quark-chpwd-smart-start {
 
 function quark-chpwd-fasd-worker {
   emulate -LR zsh
-  function TRAPTERM {
-    kill -INT $$
-  }
 
   quark-minify-path-fasd -r $1
   local quark_chpwd_minify_fasd_str=$REPLY
