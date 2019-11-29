@@ -70,6 +70,9 @@ function quark-minify-path-full {
   temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}(/oN)
   official_result=(${~temp_glob})
 
+  # set glob short circuit level
+  limit="(/oNY$(( ${#official_result} + 1 )))"
+
   # open the cache file
   if [[ ! -f $QUARK_MINIFY_PATH_CACHE_FILE ]]; then
     touch $QUARK_MINIFY_PATH_CACHE_FILE
@@ -84,18 +87,19 @@ function quark-minify-path-full {
     # verify the cache hit:
     local -a cache_glob=("${(@s:/:)quark_minify_path_cache[$test_path]}")
     temp_glob=("${(s/ /)cache_glob//(#m)?/$MATCH*}")
-    temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}(/oN)
+    temp_glob="(#l)"${${(j:/:)temp_glob}/\~\*/$HOME}$limit
     if [[ -n $DEBUG ]]; then
-      echo Testing cached: $temp_glob
+      echo Testing cached: ${(j:/:)cache_glob} → $temp_glob
     fi
     result=($(quark-with-timeout 0.3 "setopt glob_dots extended_glob; echo $temp_glob"))
+    if [[ -n $DEBUG ]]; then
+        echo cache result: $result
+    fi
     if [[ $result == $official_result ]]; then
       glob=("${(@)cache_glob}")
     fi
   fi
 
-  # set glob short circuit level
-  limit="(/Y$(( ${#official_result} + 1 )))"
 
   while ((index >= 1)); do
     if [[ ${glob[$index]} == "~" ]]; then
