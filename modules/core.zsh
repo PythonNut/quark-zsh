@@ -161,3 +161,92 @@ function quark-switch-focus-by-name {
 
   wmctrl -ia $window_id
 }
+
+typeset -a quark_md5_rotate_amounts=(
+    7 12 17 22 7 12 17 22 7 12 17 22 7 12 17 22
+    5  9 14 20 5  9 14 20 5  9 14 20 5  9 14 20
+    4 11 16 23 4 11 16 23 4 11 16 23 4 11 16 23
+    6 10 15 21 6 10 15 21 6 10 15 21 6 10 15 21
+)
+
+typeset -a quark_md5_constants=(
+    3614090360 3905402710  606105819 3250441966 4118548399
+    1200080426 2821735955 4249261313 1770035416 2336552879
+    4294925233 2304563134 1804603682 4254626195 2792965006
+    1236535329 4129170786 3225465664  643717713 3921069994
+    3593408605   38016083 3634488961 3889429448  568446438
+    3275163606 4107603335 1163531501 2850285829 4243563512
+    1735328473 2368359562 4294588738 2272392833 1839030562
+    4259657740 2763975236 1272893353 4139469664 3200236656
+     681279174 3936430074 3572445317   76029189 3654602809
+    3873151461  530742520 3299628645 4096336452 1126891415
+    2878612391 4237533241 1700485571 2399980690 4293915773
+    2240044497 1873313359 4264355552 2734768916 1309151649
+    4149444226 3174756917  718787259 3951481745
+)
+
+function quark_md5_int_to_bytes_little_endian {
+  local buf
+  local -i bytes index
+  (( bytes = 2*$2 ))
+  printf -v buf "%0${bytes}x" $1
+  reply=()
+  for ((index=$bytes; index > 0; index-=2)); do
+    reply+=($(( 16#${buf[$index-1, $index]} )))
+  done
+}
+
+function quark_md5 {
+  local -a message chunk
+  if [[ -n $1 ]]; then
+      printf -v message '%d' ${(l:2::\':)${(s::)1}}
+  fi
+  message+=(128 ${(s::)${(l:$(( 63 - ($#message + 8)%64 ))::0:)}})
+  quark_md5_int_to_bytes_little_endian $(( 8*$#1 )) 8
+  message+=($reply)
+
+  local -i h1=1732584193 h2=4023233417 h3=2562383102 h4=271733878
+  local -i chunk_ofst a b c d i f g amount to_rotate
+  for ((chunk_ofst=1; chunk_ofst<=$#message; chunk_ofst+=64)); do
+    (( a=$h1, b=$h2, c=$h3, d=$h4 ))
+    chunk=(${message[$chunk_ofst,$chunk_ofst+63]})
+    for ((i=0; $i<64; ++i)); do
+      case $(( $i/16 )) in
+          (0) (( f = ($b & $c) | (~$b & $d), g=$i )) ;;
+          (1) (( f = ($d & $b) | (~$d & $c), g = (5*$i + 1)%16 )) ;;
+          (2) (( f = $b ^ $c ^ $d, g = (3*$i + 5)%16 )) ;;
+          (3) (( f = $c ^ ($b | ~$d), g = (7*$i)%16 )) ;;
+      esac
+      ((
+          to_rotate = ($a + $f + $quark_md5_constants[$i+1] \
+                          + ${chunk[4*$g+1]} \
+                          + 256*${chunk[4*$g+2]} \
+                          + 65536*${chunk[4*$g+3]} \
+                          + 16777216*${chunk[4*$g+4]}) & 0xffffffff,
+          amount=$quark_md5_rotate_amounts[$i+1]
+      ))
+      ((
+          a = $d, d = $c, c = $b, \
+          b = ((b + ((($to_rotate << $amount) | ($to_rotate >> (32 - $amount))) \
+                     & 0xffffffff)) \
+               & 0xffffffff)
+      ))
+    done
+    ((
+        h1 += $a, h1 &= 0xffffffff,
+        h2 += $b, h2 &= 0xffffffff,
+        h3 += $c, h3 &= 0xffffffff,
+        h4 += $d, h4 &= 0xffffffff
+    ))
+  done
+
+  local result=""
+  for piece in $h1 $h2 $h3 $h4; do
+    quark_md5_int_to_bytes_little_endian $piece 4
+    local -a buf
+    printf -v buf '%02x' $reply
+    result+=${(j::)buf}
+  done
+
+  REPLY=$result
+}

@@ -52,12 +52,9 @@ QUARK_PROMPT_KEYMAP=main
 
 if (( $degraded_terminal[display_host] == 1 )); then
   if (( $degraded_terminal[colors256] != 1 )); then
-    if (( $+commands[md5sum] )); then
-      # hash hostname and generate one of 256 colors
-      QUARK_PROMPT_HOSTNAME="%F{$((0x${$(echo ${HOST%%.*} |md5sum):1:2}))}"
-    elif (( $+commands[md5] )); then
-      QUARK_PROMPT_HOSTNAME="%F{$((0x${$(echo ${HOST%%.*} |md5):1:2}))}"
-    fi
+    # hash hostname and generate one of 256 colors
+    quark_md5 ${HOST%%.*}$'\n'
+    QUARK_PROMPT_HOSTNAME="%F{$((0x${REPLY:1:2}))}"
     if [[ -n $PROMPT_HOSTNAME_FULL ]]; then
       QUARK_PROMPT_HOSTNAME+="@${HOST}%k%f"
     else
