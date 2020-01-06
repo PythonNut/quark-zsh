@@ -68,7 +68,7 @@ function quark-compute-prompt {
   local pure_ascii
   PS1=
 
-  PS1+=$'%{%B%F{red}%}%(?..↪ %?${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]:+:${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]}}\n)%{%b%F{default}%}'
+  PS1+=$'%{%B%F{red}%}%(?..${QUARK_RETURN_CODE_ARROW} %?${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]:+:${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]}}\n)%{%b%F{default}%}'
 
   # user (highlight root in red)
   if [[ -z $QUARK_BORING_USERS[(R)$USER] ]]; then
