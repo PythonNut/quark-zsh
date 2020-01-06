@@ -107,9 +107,15 @@ if [[ -f /proc/sys/kernel/osrelease ]]; then
   read _ZSH_OSRELEASE < /proc/sys/kernel/osrelease
 fi
 
+# WSL 1
 if [[ $_ZSH_OSRELEASE == *Microsoft* && -z $DISPLAY ]]; then
   degraded_terminal[unicode]=1
   setopt nobgnice
+fi
+
+# WSL 2
+if [[ $_ZSH_OSRELEASE == *microsoft* ]]; then
+  degraded_terminal[unicode]=1
 fi
 
 if [[ $INSIDE_EMACS == vterm ]]; then
