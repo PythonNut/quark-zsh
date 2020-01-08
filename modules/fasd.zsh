@@ -10,7 +10,7 @@ export _FASD_VIMINFO=~/.vim/.viminfo
 function () {
   emulate -LR zsh -o equals
   local fasd_cache="$ZDOTDIR/fasd-init-cache"
-  if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
+  if [[ ! -s "$fasd_cache" ]]; then
     fasd --init zsh-hook zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install >| "$fasd_cache"
   fi
 
