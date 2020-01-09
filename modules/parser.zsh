@@ -61,7 +61,7 @@ integer command_not_found=1
 
 function quark-parser() {
   emulate -LR zsh -o extended_glob -o null_glob -o ksh_glob
-  if [[ $(type -- ${1#\\}) == (*not*|*suffix*) ]]; then
+  if [[ $(type -- ${1#\\}) == (*not*) ]]; then
     # skip assignments
     if [[ $1 == (*=*) ]]; then
       return 0
