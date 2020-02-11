@@ -282,6 +282,12 @@ if (( $+commands[ranger] )); then
   alias f=ranger
 fi
 
+if (( $+commands[fasd] )); then
+  alias sd='fasd -sid' # interactive directory selection
+  alias sf='fasd -sif' # interactive file selection
+  alias j='fasd -e cd -d' # cd, same functionality as j in autojump
+fi
+
 # ==============
 # Expand aliases
 # ==============

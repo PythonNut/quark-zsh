@@ -23,14 +23,6 @@ function () {
   }
 }
 
-# interactive directory selection
-# interactive file selection
-alias sd='fasd -sid'
-alias sf='fasd -sif'
-
-# cd, same functionality as j in autojump
-alias j='fasd -e cd -d'
-
 _mydirstack() {
   local -a lines list
   for d in $dirstack; do
