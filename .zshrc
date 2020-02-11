@@ -24,6 +24,7 @@ echo -n > $ZDOTDIR/startup.log
 source $ZDOTDIR/modules/core.zsh
 source $ZDOTDIR/modules/env.zsh
 source $ZDOTDIR/modules/zplugin.zsh
+source $ZDOTDIR/modules/fasd.zsh
 
 if [[ -f $ZDOTDIR/local/early.zsh ]]; then
   source $ZDOTDIR/local/early.zsh
@@ -39,7 +40,6 @@ fi
 
 source $ZDOTDIR/modules/options.zsh
 source $ZDOTDIR/modules/zshctl.zsh
-source $ZDOTDIR/modules/fasd.zsh
 source $ZDOTDIR/modules/auto_fu.zsh
 source $ZDOTDIR/modules/term.zsh
 source $ZDOTDIR/modules/aliases.zsh
