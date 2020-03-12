@@ -23,7 +23,7 @@ echo -n > $ZDOTDIR/startup.log
 
 source $ZDOTDIR/modules/core.zsh
 source $ZDOTDIR/modules/env.zsh
-source $ZDOTDIR/modules/zplugin.zsh
+source $ZDOTDIR/modules/zinit.zsh
 source $ZDOTDIR/modules/fasd.zsh
 
 if [[ -f $ZDOTDIR/local/early.zsh ]]; then
