@@ -44,7 +44,7 @@ BORING_FILES='*\~|*.elc|*.pyc|!*|_*|*.swp|*.zwc|*.zwc.old|*.synctex.gz'
 if [[ $OSTYPE = (#i)((free|open|net)bsd)* ]]; then
     # in BSD, -G is the equivalent of --color
     alias -E lst=' \ls -G'
-elif [[ $OSTYPE = (#i)darwin* ]]; then
+elif [[ $OSTYPE = darwin* ]]; then
   if (( $+commands[gls] )); then
     alias lsa='\gls --color --group-directories-first'
     alias -E lst=" lsa -I '"${BORING_FILES//\|/\' -I \'}"'"

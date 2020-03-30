@@ -40,6 +40,10 @@ path+=(
   ~/.cargo/bin
 )
 
+if [[ $OSTYPE = darwin* ]]; then
+  path+=(/Library/TeX/texbin/)
+fi
+
 path=( ${(u)^path:A}(N-/) )
 
 # =================
