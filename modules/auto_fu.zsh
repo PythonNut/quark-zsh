@@ -61,6 +61,10 @@ function {
 } &>> $ZDOTDIR/startup.log
 
 {
+  ZSH_AUTOSUGGEST_USE_ASYNC=true
+  ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+  ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
+
   if (( $degraded_terminal[colors256] == 1 )); then
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=black,bold'
   fi

@@ -50,7 +50,7 @@ zinit light PythonNut/auto-fu.zsh
 zinit ice pick'async.zsh'
 zinit light mafredri/zsh-async
 zinit ice wait'0' atload'_zsh_autosuggest_start' lucid
-zinit light PythonNut/zsh-autosuggestions
+zinit light zsh-users/zsh-autosuggestions
 zinit light willghatch/zsh-hooks
 
 AUTOPAIR_INHIBIT_INIT=1
