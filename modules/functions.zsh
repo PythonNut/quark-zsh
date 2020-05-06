@@ -196,3 +196,49 @@ function swap()
   local TMPFILE=tmp.$$
   mv "$1" $TMPFILE && mv "$2" "$1" && mv $TMPFILE "$2"
 }
+
+function clipcopy() {
+  emulate -L zsh
+
+  if [[ "${OSTYPE}" == darwin* ]] && (( ${+commands[pbcopy]} )); then
+    pbcopy < "${1:-/dev/stdin}"
+  elif [[ "${OSTYPE}" == (cygwin|msys)* ]]; then
+    cat "${1:-/dev/stdin}" > /dev/clipboard
+  elif [ -n "${WAYLAND_DISPLAY:-}" ] && (( ${+commands[wl-copy]} )); then
+    wl-copy < "${1:-/dev/stdin}"
+  elif [ -n "${DISPLAY:-}" ] && (( ${+commands[xclip]} )); then
+    xclip -in -selection clipboard < "${1:-/dev/stdin}"
+  elif [ -n "${DISPLAY:-}" ] && (( ${+commands[xsel]} )); then
+    xsel --clipboard --input < "${1:-/dev/stdin}"
+  elif [ -n "${TMUX:-}" ] && (( ${+commands[tmux]} )); then
+    tmux load-buffer "${1:--}"
+  elif [[ $(uname -r) = *icrosoft* ]]; then
+    clip.exe < "${1:-/dev/stdin}"
+  else
+    print "clipcopy: Platform $OSTYPE not supported or xclip/xsel not installed" >&2
+    return 1
+  fi
+}
+
+function clippaste() {
+  emulate -L zsh
+
+  if [[ "${OSTYPE}" == darwin* ]] && (( ${+commands[pbpaste]} )); then
+    pbpaste
+  elif [[ "${OSTYPE}" == (cygwin|msys)* ]]; then
+    cat /dev/clipboard
+  elif [ -n "${WAYLAND_DISPLAY:-}" ] && (( ${+commands[wl-paste]} )); then
+    wl-paste
+  elif [ -n "${DISPLAY:-}" ] && (( ${+commands[xclip]} )); then
+    xclip -out -selection clipboard
+  elif [ -n "${DISPLAY:-}" ] && (( ${+commands[xsel]} )); then
+    xsel --clipboard --output
+  elif [ -n "${TMUX:-}" ] && (( ${+commands[tmux]} )); then
+    tmux save-buffer -
+  elif [[ $(uname -r) = *icrosoft* ]]; then
+    powershell.exe -noprofile -command Get-Clipboard
+  else
+    print "clippaste: Platform $OSTYPE not supported or xclip/xsel not installed" >&2
+    return 1
+  fi
+}
