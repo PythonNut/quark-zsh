@@ -1,4 +1,30 @@
-integer chpwd_title_manual
+integer quark_title_manual
+
+quark_title_start=
+quark_title_finish=
+
+# determine the terminals escapes
+case "$QUARK_OLD_TERM" in
+  (xterm*)
+    quark_title_start='\e]0;'
+    quark_title_finish='\a';;
+  (aixterm|dtterm|putty|rxvt)
+    quark_title_start='\033]0;'
+    quark_title_finish='\007';;
+  (cygwin)
+    quark_title_start='\033];'
+    quark_title_finish='\007';;
+  (konsole)
+    quark_title_start='\033]30;'
+    quark_title_finish='\007';;
+  (screen*)
+    ;;
+    # quark_title_start='\033]2;'
+    # quark_title_finish='\033\';;
+  (*)
+    quark_title_start=$terminfo[tsl]
+    quark_title_finish=$terminfo[fsl]
+esac
 
 # set the title
 function quark-set-title() {
@@ -7,46 +33,22 @@ function quark-set-title() {
   if (( $degraded_terminal[title] == 1 )); then
     return 0
   fi
-  
-  local titlestart titlefinish
 
-  # determine the terminals escapes
-  case "$QUARK_OLD_TERM" in
-    (xterm*)
-      titlestart='\e]0;'
-      titlefinish='\a';;
-    (aixterm|dtterm|putty|rxvt)
-      titlestart='\033]0;'
-      titlefinish='\007';;
-    (cygwin)
-      titlestart='\033];'
-      titlefinish='\007';;
-    (konsole)
-      titlestart='\033]30;'
-      titlefinish='\007';;
-    (screen*)
-      titlestart='\033]2;'
-      titlefinish='\033\';;
-    (*)
-      titlestart=$terminfo[tsl]
-      titlefinish=$terminfo[fsl]
-  esac
-
-  if [[ -z "${titlestart}" ]]; then
+  if [[ -z "${quark_title_start}" ]]; then
     degraded_terminal[title]=1
     return 0
   fi
 
-  print -Pn "${(%)titlestart}${(q)*}${(%)titlefinish}"
+  print -Pn "${(%)quark_title_start}${(q)*}${(%)quark_title_finish}"
 }
 
 # if title set manually, don't set automatically
 function settitle() {
   emulate -LR zsh
-  chpwd_title_manual=1
+  quark_title_manual=1
   quark-set-title $1
   if [[ ! -n $1 ]]; then
-    chpwd_title_manual=0
+    quark_title_manual=0
     quark-set-title
   fi
 }
@@ -78,7 +80,7 @@ function quark-title-extract-command {
 }
 
 function quark-title-sync () {
-  if (( $degraded_terminal[title] != 1 && $chpwd_title_manual == 0 )); then
+  if (( $degraded_terminal[title] != 1 && $quark_title_manual == 0 )); then
     local command
     if (( $degraded_terminal[display_host] == 1 )) && [[ ! -n $TMUX ]] ; then
       host="${HOST%%.*} "
