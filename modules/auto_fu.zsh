@@ -64,6 +64,7 @@ function {
   ZSH_AUTOSUGGEST_USE_ASYNC=true
   ZSH_AUTOSUGGEST_STRATEGY=(history completion)
   ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=80
+  ZSH_AUTOSUGGEST_MANUAL_REBIND=true
 
   if (( $degraded_terminal[colors256] == 1 )); then
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=black,bold'
@@ -74,13 +75,6 @@ function {
     "pcomplete"
     "copy-earlier-word"
   )
-
-  # Start the autosuggestion widgets
-  function _zsh_autosuggest_start {
-    _zsh_autosuggest_check_deprecated_config
-    _zsh_autosuggest_bind_widgets
-    add-zsh-hook -d precmd _zsh_autosuggest_start
-  }
 } &>> $ZDOTDIR/startup.log
 
 zstyle ':auto-fu:var' autoable-function/skiplbuffers \
