@@ -33,38 +33,40 @@ typeset -A QUARK_ERROR_CODE_SIGNAL_MAP=(
     [22]=TTOU
 )
 
-if (( $degraded_terminal[unicode] != 1 )); then
-  # a prompt that commits suicide when pasted
-  QUARK_NBSP=$'\u00A0'
-  function kill_prompt_on_paste () {
+function kill_prompt_on_paste () {
+  if (( $degraded_terminal[unicode] != 1 )); then
     PASTED=${(F)${${(f)PASTED}#*$QUARK_NBSP}}
-  }
-  zstyle :bracketed-paste-magic paste-init kill_prompt_on_paste
-
-  QUARK_RETURN_CODE_ARROW='↪'
-else
-  QUARK_NBSP=$' '
-  QUARK_RETURN_CODE_ARROW='→'
-fi
-
-QUARK_PROMPT_HOSTNAME=
-
-if (( $degraded_terminal[display_host] == 1 )); then
-  if (( $degraded_terminal[colors256] != 1 )); then
-    # hash hostname and generate one of 256 colors
-    quark_md5 ${HOST%%.*}$'\n'
-    QUARK_PROMPT_HOSTNAME="%F{$((0x${REPLY:1:2}))}"
-    if [[ -n $PROMPT_HOSTNAME_FULL ]]; then
-      QUARK_PROMPT_HOSTNAME+="@${HOST}%k%f"
-    else
-      QUARK_PROMPT_HOSTNAME+="@${HOST:0:3}%k%f"
-    fi
   fi
-fi
+}
+zstyle :bracketed-paste-magic paste-init kill_prompt_on_paste
+
+QUARK_NBSP=' '
+QUARK_RETURN_CODE_ARROW='→'
+QUARK_PROMPT_HOSTNAME=
 
 function quark-compute-prompt {
   emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
   local pure_ascii
+
+  if (( $degraded_terminal[unicode] != 1 )); then
+    # a prompt that commits suicide when pasted
+    QUARK_NBSP=$'\u00A0'
+    QUARK_RETURN_CODE_ARROW='↪'
+  fi
+
+  if (( $degraded_terminal[display_host] == 1 )); then
+    if (( $degraded_terminal[colors256] != 1 )); then
+      # hash hostname and generate one of 256 colors
+      quark_md5 ${HOST%%.*}$'\n'
+      QUARK_PROMPT_HOSTNAME="%F{$((0x${REPLY:1:2}))}"
+      if [[ -n $PROMPT_HOSTNAME_FULL ]]; then
+        QUARK_PROMPT_HOSTNAME+="@${HOST}%k%f"
+      else
+        QUARK_PROMPT_HOSTNAME+="@${HOST:0:3}%k%f"
+      fi
+    fi
+  fi
+
   PS1=
 
   PS1+=$'%{%B%F{red}%}%(?..${QUARK_RETURN_CODE_ARROW} %?${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]:+:${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]}}\n)%{%b%F{default}%}'
