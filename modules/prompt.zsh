@@ -48,7 +48,6 @@ else
 fi
 
 QUARK_PROMPT_HOSTNAME=
-QUARK_PROMPT_KEYMAP=main
 
 if (( $degraded_terminal[display_host] == 1 )); then
   if (( $degraded_terminal[colors256] != 1 )); then
@@ -105,7 +104,7 @@ function quark-compute-prompt {
   fi
 
   # change the sigil color based on the return code and keymap
-  PS1+='${${${${${QUARK_PROMPT_KEYMAP}:#vicmd}:-%{%F{magenta\}%\}}:#${QUARK_PROMPT_KEYMAP}}:-%{%(?.%F{green\}.%B%F{red\})%\}}'
+  PS1+='${${${${${KEYMAP}:#vicmd}:-%{%F{magenta\}%\}}:#${KEYMAP}}:-%{%(?.%F{green\}.%B%F{red\})%\}}'
 
   # compute the sigil
   if [[ -n $TMUX ]]; then
@@ -128,8 +127,6 @@ RPS2='%^'
 
 # intercept keymap selection
 function zle-keymap-select () {
-  emulate -LR zsh -o prompt_subst -o transient_rprompt -o extended_glob
-  QUARK_PROMPT_KEYMAP=$KEYMAP
   zle reset-prompt
 }
 zle -N zle-keymap-select
