@@ -67,9 +67,7 @@ function quark-compute-prompt {
     fi
   fi
 
-  PS1=
-
-  PS1+=$'%{%B%F{red}%}%(?..${QUARK_RETURN_CODE_ARROW} %?${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]:+:${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]}}\n)%{%b%F{default}%}'
+  PS1=$'%{%B%F{red}%}%(?..${QUARK_RETURN_CODE_ARROW} %?${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]:+:${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]}}\n)%{%b%F{default}%}'
 
   # user (highlight root in red)
   if [[ -z $QUARK_BORING_USERS[(R)$USER] ]]; then
@@ -97,7 +95,7 @@ function quark-compute-prompt {
     fi
 
     # vim normal/textobject mode indicator
-    RPS1='${${PROMPT_KEYMAP/vicmd/%B%F{black\} [% N]% %b }/(afu|main)/}'
+    RPS1='${${PROMPT_KEYMAP/vicmd/%B%F{black\} [% N]% %b }/main/}'
     RPS1=$RPS1'${vcs_info_msg_0_}'
 
   else
@@ -128,7 +126,8 @@ PS2='${(l:$(quark-strlen "${(e)PS1}"):: :)${:->$QUARK_NBSP}}'
 RPS2='%^'
 
 # intercept keymap selection
-function zle-keymap-select () {
+function quark-keymap-prompt-reset () {
   zle reset-prompt
 }
-zle -N zle-keymap-select
+
+hooks-add-hook zle_keymap_select_hook quark-keymap-prompt-reset
