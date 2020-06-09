@@ -45,41 +45,13 @@ zinit light yonchu/zaw-src-git-show-branch
 zinit ice pick'git-escape-magic'
 zinit light knu/zsh-git-escape-magic
 
-zinit light PythonNut/auto-fu.zsh
-
 zinit ice pick'async.zsh'
 zinit light mafredri/zsh-async
 zinit ice wait'0' atload'_zsh_autosuggest_start' lucid
 zinit light zsh-users/zsh-autosuggestions
 zinit light willghatch/zsh-hooks
 
-AUTOPAIR_INHIBIT_INIT=1
 zinit light hlissner/zsh-autopair
-
-autopair-init() {
-    zle -N autopair-insert
-    zle -N autopair-close
-    zle -N autopair-delete
-
-    local p
-    for p in ${(@k)AUTOPAIR_PAIRS}; do
-        bindkey -M afu "$p" autopair-insert
-        bindkey -M isearch "$p" self-insert
-
-        local rchar="$(_ap-get-pair $p)"
-        if [[ $p != $rchar ]]; then
-          bindkey -M afu "$rchar" autopair-close
-          bindkey -M isearch "$rchar" self-insert
-        fi
-    done
-
-    bindkey -M afu "^?" autopair-delete
-    bindkey -M afu "^h" autopair-delete
-    bindkey -M isearch "^?" backward-delete-char
-    bindkey -M isearch "^h" backward-delete-char
-}
-
-autopair-init
 
 autopair-insert() {
     local rchar="$(_ap-get-pair $KEYS)"

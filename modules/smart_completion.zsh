@@ -53,20 +53,6 @@ function pcomplete() {
     local -i single_match
     local -a match mbegin mend
 
-    # detect single auto-fu match
-    for param in $region_highlight; do
-      if [[ $param == (#b)[^0-9]#(<->)[^0-9]##(<->)(*) ]]; then
-        i=($match)
-        if [[ $i[3] == *black* ]] && (($i[2] - $i[1] > 0 && $i[1] > 1)); then
-          pcomplete_forward_word
-          break
-        elif [[ $i[3] == *underline* ]] && (($i[2] - $i[1] > 0 && $i[1] >= $CURSOR)); then
-          single_match=1
-          break
-        fi
-      fi
-    done
-
     if [[ $single_match == 1 ]]; then
       zle expand-or-complete
       if [[ $LBUFFER[-1] == " " ]]; then
