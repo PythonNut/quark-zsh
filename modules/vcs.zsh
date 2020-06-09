@@ -120,69 +120,19 @@ function +vi-hg-untracked {
   fi
 }
 
-function quark-vcs-get-root-dir {
-  case $1 in
-    (git)
-      git rev-parse --show-toplevel;;
-    (hg)
-      hg root;;
-    (svn)
-      if [[ -d ".svn" ]]; then
-        if [[ -d "../.svn" ]]; then
-          # case 2: SVN < 1.7, any directory
-          local parent=""
-          local grandparent="."
-
-          while [[ -d "$grandparent/.svn" ]]; do
-              parent=$grandparent
-              grandparent="$parent/.."
-          done
-
-          echo ${parent:A}
-        else
-          # case 2: SVN >= 1.7, root directory
-          echo ${${:-.}:A}
-        fi
-      else
-        # case 3: SVN >= 1.7, non root directory
-        local parent="."
-        while [[ ! -d "$parent/.svn" ]]; do
-            parent+="/.."
-        done
-
-        echo ${parent:A}
-      fi;;
-    (bzr)
-      bzr root;;
-    (cvs)
-      echo $CVSROOT;;
-    (*)
-      echo $PWD;;
-  esac
-}
-
 function quark-vcs-worker {
   local vcs_super_info
-  local vcs_root_dir
-  local -a vcs_super_raw_data
 
   builtin cd $1
   vcs_current_pwd=$1
   vcs_super_info="$(vcs_super_info)"
-  vcs_super_raw_data=($(vcs_super_info_raw_data))
-  vcs_root_dir=${$(quark-vcs-get-root-dir $vcs_super_raw_data[2])%/}
 
   typeset -p vcs_current_pwd
   typeset -p vcs_super_info
-  typeset -p vcs_super_raw_data
-  typeset -p vcs_root_dir
 }
 
 function quark-vcs-worker-callback {
-  local current_pwd=${${:-.}:A}
   local vcs_super_info
-  local vcs_super_raw_data
-  local vcs_root_dir
 
   if [[ $5 == quark_vcs_worker:zle\ -F*returned\ error* ]]; then
     quark-vcs-worker-setup
@@ -191,25 +141,18 @@ function quark-vcs-worker-callback {
 
   quark-sched-remove quark-vcs-worker-timeout
 
-  typeset -g vcs_last_root
-
   eval $3
 
   typeset -g vcs_info_msg_0_
-  typeset -g vcs_raw_data
   vcs_info_msg_0_=$vcs_super_info
-  vcs_raw_data=($vcs_super_raw_data)
 
   if (( $6 == 0 )); then
     zle && zle reset-prompt
   fi
 
-  # if we're in a vcs, start an inotify process
-  if [[ $current_pwd/ != $vcs_last_root/* ]]; then
+  if [[ $PWD != $vcs_current_pwd ]]; then
     quark-vcs-start
   fi
-
-  vcs_last_root=$vcs_root_dir
 }
 
 function quark-vcs-worker-check {
@@ -239,7 +182,7 @@ function quark-vcs-worker-timeout {
 }
 
 function quark-vcs-start {
-  async_job quark_vcs_worker quark-vcs-worker ${${:-.}:A}
+  async_job quark_vcs_worker quark-vcs-worker $PWD
 
   sched +1 quark-vcs-worker-check
   sched +9 quark-vcs-worker-check
