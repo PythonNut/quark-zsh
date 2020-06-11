@@ -76,27 +76,28 @@ function quark-with-timeout {
   emulate -LR zsh -o no_monitor
   local stat_reply
   local -F time_limit=$1
-  # This also resets $SECONDS to 0, locally
-  local -F SECONDS
+  local -F start_time=$EPOCHREALTIME
   shift
   (eval $@) &
   # TODO: /proc probably isn't portable
   zstat -A stat_reply '+mtime' /proc/$!
 
-  local PID=$! MTIME=${stat_reply[1]}
+  local pid=$! mtime=${stat_reply[1]}
   while true; do
     sleep 0.001
-    if [[ ! -d /proc/$PID ]]; then
+    if [[ ! -d /proc/$pid ]]; then
         break
     fi
-    zstat -A stat_reply '+mtime' /proc/$PID
-    if [[ ${stat_reply[1]} != $MTIME ]]; then
+    # Note: this can fail b/c of a race condition with the previous
+    # check, however we'll loop exactly once more, so it's ok.
+    zstat -A stat_reply '+mtime' /proc/$pid 2> /dev/null
+    if [[ ${stat_reply[1]} != $mtime ]]; then
         break
     fi
-    if (( $SECONDS > $time_limit )); then
+    if (( $EPOCHREALTIME - $start_time > $time_limit )); then
         {
-          kill $PID
-          wait $PID
+          kill $pid
+          wait $pid
         } 2> /dev/null
         break
     fi
