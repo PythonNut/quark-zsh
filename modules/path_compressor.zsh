@@ -77,9 +77,9 @@ function quark-minify-path-full {
   if [[ ! -f $QUARK_MINIFY_PATH_CACHE_FILE ]]; then
     touch $QUARK_MINIFY_PATH_CACHE_FILE
     quark_minify_path_cache=()
+  else
+    source $QUARK_MINIFY_PATH_CACHE_FILE
   fi
-
-  source $QUARK_MINIFY_PATH_CACHE_FILE
 
   local test_glob=("${(@)glob}")
   local test_path=${(@j:/:)test_glob}
