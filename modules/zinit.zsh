@@ -18,6 +18,8 @@ source ${ZINIT[HOME_DIR]}/bin/zinit.zsh
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
+zinit light hlissner/zsh-autopair
+
 zinit ice atload'[[ -f  ${FAST_WORK_DIR}/current_theme.zsh ]] || fast-theme $ZDOTDIR/fsh/custom.ini'
 zinit light zdharma/fast-syntax-highlighting
 
@@ -47,31 +49,7 @@ zinit light knu/zsh-git-escape-magic
 
 zinit ice pick'async.zsh'
 zinit light mafredri/zsh-async
-zinit ice wait'0' atload'_zsh_autosuggest_start' lucid
+zinit ice atload'_zsh_autosuggest_start'
 zinit light zsh-users/zsh-autosuggestions
+zinit light marlonrichert/zsh-autocomplete
 zinit light willghatch/zsh-hooks
-
-zinit light hlissner/zsh-autopair
-
-autopair-insert() {
-    local rchar="$(_ap-get-pair $KEYS)"
-    if [[ $KEYS == (\'|\"|\`| ) ]] && _ap-can-skip-p $KEYS $rchar; then
-      zle forward-char
-    elif _ap-can-pair-p; then
-      _ap-self-insert $KEYS $rchar
-    elif [[ $rchar == " " ]]; then
-      zle ${AUTOPAIR_SPC_WIDGET:-self-insert}
-    else
-        zle self-insert
-    fi
-    _zsh_highlight
-}
-
-autopair-close() {
-    if _ap-can-skip-p "$(_ap-get-pair "" $KEYS)" $KEYS; then
-      zle forward-char
-    else
-        zle self-insert
-    fi
-    _zsh_highlight
-}

@@ -1,6 +1,10 @@
 # =============================
 # AutoFU continuous completions
 # =============================
+zstyle ':autocomplete:list-choices:*' min-input 3
+zstyle ':autocomplete:list-choices:*' max-lines 10
+zstyle ':autocomplete:*' magic off
+zstyle ':autocomplete:tab:*' completion select
 
 {
   ZSH_AUTOSUGGEST_USE_ASYNC=true

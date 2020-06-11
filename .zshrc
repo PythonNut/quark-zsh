@@ -40,7 +40,7 @@ fi
 
 source $ZDOTDIR/modules/options.zsh
 source $ZDOTDIR/modules/zshctl.zsh
-source $ZDOTDIR/modules/auto_fu.zsh
+source $ZDOTDIR/modules/autocomplete.zsh
 source $ZDOTDIR/modules/term.zsh
 source $ZDOTDIR/modules/aliases.zsh
 source $ZDOTDIR/modules/vim.zsh
