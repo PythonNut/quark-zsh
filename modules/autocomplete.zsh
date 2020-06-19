@@ -5,6 +5,9 @@ zstyle ':autocomplete:list-choices:*' min-input 3
 zstyle ':autocomplete:list-choices:*' max-lines 10
 zstyle ':autocomplete:*' magic off
 zstyle ':autocomplete:tab:*' completion select
+zstyle ':autocomplete:*:no-matches-yet' message '...'
+zstyle ':autocomplete:*:no-matches-at-all' message "- no matches -"
+zstyle ':autocomplete:*:too-many-matches' message '---'
 
 {
   ZSH_AUTOSUGGEST_USE_ASYNC=true
