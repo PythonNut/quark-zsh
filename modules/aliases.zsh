@@ -376,3 +376,9 @@ global_bindkey " " quark-expand-alias
 global_bindkey "^ " magic-space
 bindkey -M isearch " " magic-space
 
+function quark-post-autocomplete () {
+  global_bindkey " " quark-expand-alias
+  add-zsh-hook -d precmd quark-post-autocomplete
+}
+
+add-zsh-hook precmd quark-post-autocomplete
