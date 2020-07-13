@@ -298,6 +298,7 @@ function quark-expand-alias {
   {
     # hack a local function scope using unfuction
     function quark-expand-alias-smart-space {
+
       if [[ $RBUFFER[1] != ' ' ]]; then
         zle magic-space
       else
@@ -315,6 +316,7 @@ function quark-expand-alias {
       zparseopts -D -E g=G
       local expansion="${@[2,-1]}"
       local delta=$(($#expansion - $expansion[(i){}] - 1))
+      local -i i
 
       alias ${G:+-g} $1=${expansion/{}/}
 
@@ -347,17 +349,18 @@ function quark-expand-alias {
     elif [[ -n "$global_abbrevs[$cmd[-1]]" ]]; then
       quark-alias-smart-expand -g $cmd[-1] "$(${=${(e)global_abbrevs[$cmd[-1]]}})"
 
-    elif [[ "${(j: :)cmd}" == *\!* ]] && alias "$cmd[-1]" &>/dev/null; then
-      if [[ -n "$aliases[$cmd[-1]]" ]]; then
-        LBUFFER="$aliases[$cmd[-1]] "
-      fi
-      
+    elif [[ "${(j: :)cmd}" == *\!* && -n "$aliases[$cmd[-1]]" ]]; then
+      LBUFFER="$aliases[$cmd[-1]] "
+
     elif [[ "$+expand[(r)$cmd[-1]]" != 1 && "$cmd[-1]" != (\\|\"|\')* ]]; then
       zle _expand_alias
-      quark-expand-alias-smart-space "$1"
-      
+      if [[ $1 != no_space ]]; then
+        quark-expand-alias-smart-space "$1"
+      fi
     else
-      quark-expand-alias-smart-space "$1"
+      if [[ $1 != no_space ]]; then
+        quark-expand-alias-smart-space "$1"
+      fi
     fi
 
   } always {
