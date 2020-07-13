@@ -95,7 +95,7 @@ function quark-compute-prompt {
     fi
 
     # vim normal/textobject mode indicator
-    RPS1='${${PROMPT_KEYMAP/vicmd/%B%F{black\} [% N]% %b }/main/}'
+    RPS1='${${KEYMAP/vicmd/%B%F{black\} [% N]% %b }/main/}'
     RPS1=$RPS1'${vcs_info_msg_0_}'
 
   else
@@ -127,7 +127,7 @@ RPS2='%^'
 
 # intercept keymap selection
 function quark-keymap-prompt-reset () {
-  zle reset-prompt
+  zle && zle reset-prompt
 }
 
 hooks-add-hook zle_keymap_select_hook quark-keymap-prompt-reset
