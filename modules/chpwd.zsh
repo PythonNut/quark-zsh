@@ -57,11 +57,7 @@ function quark-chpwd-smart-worker-timeout {
 }
 
 function quark-chpwd-smart-start {
-  async_job quark_chpwd_smart_worker quark-chpwd-smart-worker ${${:-.}:A}
-
-  sched +1 quark-chpwd-smart-worker-check
-  # sched +2 quark-chpwd-smart-worker-check
-  sched +9 quark-chpwd-smart-worker-check
+  async_job quark_chpwd_smart_worker quark-chpwd-smart-worker ${${:-.}:A} 2>> $ZDOTDIR/startup.log
 
   sched +10 quark-chpwd-smart-worker-timeout
 }
@@ -123,11 +119,7 @@ function quark-chpwd-fasd-worker-timeout {
 }
 
 function quark-chpwd-fasd-start {
-  async_job quark_chpwd_fasd_worker quark-chpwd-fasd-worker ${${:-.}:A}
-
-  sched +1 quark-chpwd-fasd-worker-check
-  # sched +2 quark-chpwd-fasd-worker-check
-  sched +9 quark-chpwd-fasd-worker-check
+  async_job quark_chpwd_fasd_worker quark-chpwd-fasd-worker ${${:-.}:A} 2>> $ZDOTDIR/startup.log
 
   sched +10 quark-chpwd-fasd-worker-timeout
 }

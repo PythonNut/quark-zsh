@@ -182,10 +182,7 @@ function quark-vcs-worker-timeout {
 }
 
 function quark-vcs-start {
-  async_job quark_vcs_worker quark-vcs-worker $PWD
-
-  sched +1 quark-vcs-worker-check
-  sched +9 quark-vcs-worker-check
+  async_job quark_vcs_worker quark-vcs-worker $PWD 2>> $ZDOTDIR/startup.log
 
   sched +10 quark-vcs-worker-timeout
 }
