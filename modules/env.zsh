@@ -67,25 +67,36 @@ QUARK_OLD_TERM=$TERM
 case $QUARK_OLD_TERM in
   (linux|vt100)
     degraded_terminal[colors256]=1
-    degraded_terminal[unicode]=1;;
+    degraded_terminal[unicode]=1
+    ;;
 
-  (screen*|tmux*)
+  (screen)
     # check for lack of 256color support
     if [[ $TTY == /dev/tty*  ]]; then
       export TERM='screen'
     else
       export TERM='screen-256color'
-    fi;;
+    fi
+    ;;
+
+  (tmux)
+    # check for lack of 256color support
+    if [[ $TTY == /dev/tty*  ]]; then
+      export TERM='tmux'
+    else
+      export TERM='tmux-256color'
+    fi
+    ;;
 
   (eterm*)
     degraded_terminal[unicode]=1
-    degraded_terminal[title]=1;;
+    degraded_terminal[title]=1
+    ;;
 
-  (xterm-256color)
+  (xterm-256color|tmux-256color|screen-256color)
     ;;
 
   (*)
-    export TERM=xterm
     if [[ -f /usr/share/terminfo/x/xterm-256color ]]; then
       export TERM=xterm-256color
     elif [[ -f /lib/terminfo/x/xterm-256color ]]; then
@@ -94,7 +105,8 @@ case $QUARK_OLD_TERM in
       if [[ $mapfile[/usr/share/misc/termcap] == *xterm-256color* ]]; then
         export TERM=xterm-256color
       fi
-    fi;;
+    fi
+    ;;
 esac
 
 if [[ -n ${MC_TMPDIR+1} ]]; then
