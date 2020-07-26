@@ -134,12 +134,13 @@ function quark-vcs-worker {
 function quark-vcs-worker-callback {
   local vcs_super_info
 
+  quark-sched-remove quark-vcs-worker-timeout
+  quark-sched-remove quark-vcs-worker-check
+
   if [[ $5 == quark_vcs_worker:zle\ -F*returned\ error* ]]; then
     quark-vcs-worker-setup
     return
   fi
-
-  quark-sched-remove quark-vcs-worker-timeout
 
   eval $3
 
