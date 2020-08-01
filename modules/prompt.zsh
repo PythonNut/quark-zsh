@@ -95,7 +95,7 @@ function quark-compute-prompt {
     fi
 
     # vim normal/textobject mode indicator
-    RPS1='${${KEYMAP/vicmd/%B%F{black\} [% N]% %b }/main/}'
+    RPS1='${${KEYMAP/#%vicmd/%B%F{black\} [% N]% %b }/main/}'
     RPS1=$RPS1'${vcs_info_msg_0_}'
 
   else
@@ -104,7 +104,7 @@ function quark-compute-prompt {
   fi
 
   # change the sigil color based on the return code and keymap
-  PS1+='${${${${${KEYMAP}:#vicmd}:-%{%F{magenta\}%\}}:#${KEYMAP}}:-%{%(?.%F{green\}.%B%F{red\})%\}}'
+  PS1+='${${${KEYMAP/#%vicmd/%{%F{magenta\}%\}}:#${KEYMAP}}:-%{%(?.%F{green\}.%B%F{red\})%\}}'
 
   # compute the sigil
   if [[ -n $TMUX ]]; then
