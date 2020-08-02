@@ -24,7 +24,6 @@ setopt list_packed            # conserve space
 # globbing
 setopt numeric_glob_sort      # sort globs numerically
 setopt extended_glob          # awesome globs
-setopt ksh_glob               # allow modifiers before regex ()
 setopt no_case_glob           # lazy case for globs
 setopt glob_dots              # don't require a dot
 setopt glob_star_short        # **.c ==> **/*.c
