@@ -279,7 +279,7 @@ if (( $+commands[emacsclient] )); then
 fi
 
 if (( $+commands[ranger] )); then
-  alias f=ranger
+  alias f=". ranger"
 fi
 
 if (( $+commands[fasd] )); then
