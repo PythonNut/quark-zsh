@@ -4,6 +4,7 @@
 zstyle ':autocomplete:list-choices:*' min-input 3
 zstyle ':autocomplete:list-choices:*' max-lines 10
 zstyle ':autocomplete:*' magic off
+zstyle ':autocomplete:*' fuzzy-search off
 zstyle ':autocomplete:tab:*' completion select
 zstyle ':autocomplete:' recent-dirs off
 zstyle ':autocomplete:' recent-files off
@@ -37,3 +38,5 @@ function global_bindkey () {
 
 global_bindkey "^Hk" describe-key-briefly
 global_bindkey "^[ " autosuggest-accept
+
+functions[.autocomplete.recent-dirs.precmd]=$functions[_autocomplete.no-op]
