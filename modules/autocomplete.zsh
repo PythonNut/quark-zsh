@@ -41,9 +41,9 @@ function global_bindkey () {
 global_bindkey "^Hk" describe-key-briefly
 global_bindkey "^[ " autosuggest-accept
 
-functions[.autocomplete.recent-dirs.precmd]=$functions[_autocomplete.no-op]
+function .autocomplete.recent-dirs.precmd() { }
 
-.autocomplete.key-binding.precmd() {
+function .autocomplete.key-binding.precmd() {
   emulate -L zsh
   add-zsh-hook -d precmd .autocomplete.key-binding.precmd
 
