@@ -2,19 +2,8 @@
 # Environment
 # ===========
 
-if (( $+commands[nvim] )); then
-  export EDITOR="nvim"
-elif (( $+commands[gvim] )); then
-  export EDITOR="$ZDOTDIR/bin/gvim-with-flags"
-elif (( $+commands[vim] )); then
-  export EDITOR="vim"
-elif (( $+commands[emacs] )); then
-  export EDITOR="$ZDOTDIR/bin/emacs-with-flags"
-elif (( $+commands[vi] )); then
-  export EDITOR="vi"
-elif (( $+commands[nano] )); then
-  export EDITOR="nano"
-fi
+export EDITOR="$ZDOTDIR/bin/editor-dispatch.zsh"
+export VISUAL=$EDITOR
 
 export SAGE_STARTUP_FILE=~/.sage/init.sage
 export PATH

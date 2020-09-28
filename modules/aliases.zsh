@@ -269,12 +269,12 @@ if (( $+commands[git-annex] )); then
 fi
 
 if (( $+commands[emacsclient] )); then
-  alias emacsd="g emacs --daemon"
+  alias emacsd="s emacs --daemon"
   alias emacsdk="emacsclient -e '(kill-emacs)'"j
 
+  compdef _files e
   function e {
-    emacsclient -n -q -a $EDITOR ${@}
-    quark-switch-focus-by-name emacs
+    $ZDOTDIR/bin/editor-dispatch.zsh --async ${@}
   }
 fi
 
