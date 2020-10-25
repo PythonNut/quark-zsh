@@ -76,17 +76,17 @@ alias -- ---------='cd -9'
 # ls aliases
 if (( $+commands[exa] )); then
   alias exa="exa --group-directories-first -I \"${BORING_FILES}\""
-  alias ls='exa -Fx'
-  alias l='exa -FGlx --git'
-  alias ll='exa -FGlax --git'
+  alias ls='exa -F'
+  alias l='exa -FGl --git'
+  alias ll='exa -FGla --git'
   alias lll='exa -Fla --git'
-  alias lss='exa -FGlxrs size'
+  alias lss='exa -FGlrs size'
   alias lsp='\ls'
 else
-  alias ls='lst -BFxv'
+  alias ls='lst -BFv'
   alias l='lst -lFBGhv'
   alias ll='lsa -lAFGhv'
-  alias lss='lst -BFshxv'
+  alias lss='lst -BFshv'
   alias lsp='\ls'
 fi
 
