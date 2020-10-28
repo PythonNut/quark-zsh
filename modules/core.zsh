@@ -21,6 +21,7 @@ zmodload zsh/terminfo            # terminal parameters from terminfo
 zmodload zsh/complist            # various completion functions
 zmodload zsh/mapfile             # read files directly
 zmodload zsh/datetime            # date and time helpers
+zmodload zsh/parameter           # internal hash tables as parameters
 zmodload -F zsh/stat b:zstat     # get stat info natively
 
 function quark-log {
@@ -250,4 +251,20 @@ function quark_md5 {
   done
 
   REPLY=$result
+}
+
+function quark-async-renice {
+  setopt localoptions noshwordsplit
+
+  if (( $+commands[renice] )); then
+      command renice -n 20 -p $$
+  fi
+
+  if (( $+commands[ionice] )); then
+      command ionice -c 3 -p $$
+  fi
+
+  if (( $+commands[schedtoo] )); then
+      command schedtool -B $$
+  fi
 }

@@ -56,6 +56,7 @@ function quark-chpwd-smart-worker-check {
 function quark-chpwd-smart-worker-setup {
   async_start_worker quark_chpwd_smart_worker -u
   async_register_callback quark_chpwd_smart_worker quark-chpwd-smart-worker-callback
+  async_worker_eval quark_chpwd_smart_worker quark-async-renice
 }
 
 function quark-chpwd-smart-worker-cleanup {
@@ -131,6 +132,7 @@ function quark-chpwd-fasd-worker-check {
 function quark-chpwd-fasd-worker-setup {
   async_start_worker quark_chpwd_fasd_worker -u
   async_register_callback quark_chpwd_fasd_worker quark-chpwd-fasd-worker-callback
+  async_worker_eval quark_chpwd_fasd_worker quark-async-renice
 }
 
 function quark-chpwd-fasd-worker-cleanup {

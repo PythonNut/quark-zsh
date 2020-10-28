@@ -179,6 +179,7 @@ function quark-vcs-worker-check {
 function quark-vcs-worker-setup {
   async_start_worker quark_vcs_worker -u
   async_register_callback quark_vcs_worker quark-vcs-worker-callback
+  async_worker_eval quark_vcs_worker quark-async-renice
 }
 
 function quark-vcs-worker-cleanup {
