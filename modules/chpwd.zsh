@@ -13,24 +13,39 @@ function quark-chpwd-smart-worker {
 
 function quark-chpwd-smart-worker-callback {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
+  local job=$1 code=$2 output=$3 exec_time=$4 error=$5 next_pending=$6
 
   quark-sched-remove quark-chpwd-smart-worker-timeout
   quark-sched-remove quark-chpwd-smart-worker-check
 
-  if [[ $5 == quark_chpwd_smart_worker:zle\ -F*returned\ error* ]]; then
-    quark-chpwd-smart-worker-setup
-    return
-  fi
+  case $job in
+      (\[async\])
+          if (( code == 2 )) || (( code == 3 )) || (( code == 130 )); then
+            quark-chpwd-smart-worker-cleanup
+            quark-chpwd-smart-worker-setup
+            return
+          fi
+          ;;
+      (\[async/eval\])
+          if (( code )); then
+            quark-chpwd-smart-start
+          fi
+          ;;
+      (quark-chpwd-smart-worker)
+          quark-eval-overriding-globals $output
 
-  quark-eval-overriding-globals $3
+          float -g quark_chpwd_smart_duration=$exec_time
 
-  float -g quark_chpwd_smart_duration=$4
+          if (( $next_pending == 0 )); then
+            zle && zle reset-prompt
+          fi
 
-  if (( $6 == 0 )); then
-    zle && zle reset-prompt
-  fi
-
-  quark-title-sync
+          quark-title-sync
+          ;;
+      (*)
+          quark-error "Unknown job name $job"
+          ;;
+  esac
 }
 
 function quark-chpwd-smart-worker-check {
@@ -73,24 +88,39 @@ function quark-chpwd-fasd-worker {
 
 function quark-chpwd-fasd-worker-callback {
   emulate -LR zsh -o prompt_subst -o transient_rprompt
+  local job=$1 code=$2 output=$3 exec_time=$4 error=$5 next_pending=$6
 
   quark-sched-remove quark-chpwd-fasd-worker-timeout
   quark-sched-remove quark-chpwd-fasd-worker-check
 
-  if [[ $5 == quark_chpwd_fasd_worker:zle\ -F*returned\ error* ]]; then
-    quark-chpwd-fasd-worker-setup
-    return
-  fi
+  case $job in
+      (\[async\])
+          if (( code == 2 )) || (( code == 3 )) || (( code == 130 )); then
+            quark-chpwd-fasd-worker-cleanup
+            quark-chpwd-fasd-worker-setup
+            return
+          fi
+          ;;
+      (\[async/eval\])
+          if (( code )); then
+            quark-chpwd-fasd-start
+          fi
+          ;;
+      (quark-chpwd-fasd-worker)
+          quark-eval-overriding-globals $output
 
-  quark-eval-overriding-globals $3
+          float -g quark_chpwd_fasd_duration=$exec_time
 
-  float -g quark_chpwd_fasd_duration=$4
+          if (( $next_pending == 0 )); then
+            zle && zle reset-prompt
+          fi
 
-  if (( $6 == 0 )); then
-    zle && zle reset-prompt
-  fi
-
-  quark-title-sync
+          quark-title-sync
+          ;;
+      (*)
+          quark-error "Unknown job name $job"
+          ;;
+  esac
 }
 
 function quark-chpwd-fasd-worker-check {

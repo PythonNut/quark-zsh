@@ -132,28 +132,43 @@ function quark-vcs-worker {
 }
 
 function quark-vcs-worker-callback {
+  local job=$1 code=$2 output=$3 exec_time=$4 error=$5 next_pending=$6
   local vcs_super_info
 
   quark-sched-remove quark-vcs-worker-timeout
   quark-sched-remove quark-vcs-worker-check
 
-  if [[ $5 == quark_vcs_worker:zle\ -F*returned\ error* ]]; then
-    quark-vcs-worker-setup
-    return
-  fi
+  case $job in
+      (\[async\])
+          if (( code == 2 )) || (( code == 3 )) || (( code == 130 )); then
+            quark-vcs-worker-cleanup
+            quark-vcs-worker-setup
+            return
+          fi
+          ;;
+      (\[async/eval\])
+          if (( code )); then
+            quark-vcs-start
+          fi
+          ;;
+      (quark-vcs-worker)
+          eval $output
 
-  eval $3
+          typeset -g vcs_info_msg_0_
+          vcs_info_msg_0_=$vcs_super_info
 
-  typeset -g vcs_info_msg_0_
-  vcs_info_msg_0_=$vcs_super_info
+          if (( $next_pending == 0 )); then
+            zle && zle reset-prompt
+          fi
 
-  if (( $6 == 0 )); then
-    zle && zle reset-prompt
-  fi
-
-  if [[ $PWD != $vcs_current_pwd ]]; then
-    quark-vcs-start
-  fi
+          if [[ $PWD != $vcs_current_pwd ]]; then
+            quark-vcs-start
+          fi
+          ;;
+      (*)
+          quark-error "Unknown job name $job"
+          ;;
+  esac
 }
 
 function quark-vcs-worker-check {
