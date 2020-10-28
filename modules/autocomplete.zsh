@@ -5,7 +5,8 @@ zstyle ':autocomplete:list-choices:*' min-input 3
 zstyle ':autocomplete:list-choices:*' max-lines 10
 zstyle ':autocomplete:*' magic off
 zstyle ':autocomplete:*' fuzzy-search off
-zstyle ':autocomplete:tab:*' completion select
+zstyle ':autocomplete:tab:*' insert-unambiguous yes
+zstyle ':autocomplete:tab:*' widget-style menu-select
 zstyle ':autocomplete:' recent-dirs off
 zstyle ':autocomplete:' recent-files off
 zstyle ':autocomplete:*:no-matches-yet' message '...'
