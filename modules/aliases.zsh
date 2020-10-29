@@ -91,9 +91,10 @@ else
 fi
 
 # safety aliases
-alias rm='rm -i'
-alias -E cp='nocorrect \cp -i'
-alias -E mv='\mv -i'
+alias rm='\rm -iv'
+alias cp='\cp -riv'
+alias mv='\mv -iv'
+alias mkdir="\mkdir -vp"
 alias ln="\ln -s"
 
 # global aliases
