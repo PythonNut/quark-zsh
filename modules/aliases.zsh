@@ -57,9 +57,9 @@ else
 fi
 
 if (( $+commands[gegrep] )); then
-  alias -E egrep='nocorrect \gegrep --line-buffered --color=auto'
+  alias -E egrep='\gegrep --line-buffered --color=auto'
 else
-  alias -E egrep='nocorrect \egrep --line-buffered --color=auto'
+  alias -E egrep='\egrep --line-buffered --color=auto'
 fi
 
 # cd aliases
@@ -122,20 +122,8 @@ else
 fi
 
 # suppression aliases
-alias -E man='nocorrect noglob \man'
-alias -E find='noglob find'
-alias -E touch='nocorrect \touch'
-alias -E mkdir='nocorrect \mkdir'
-
-if (( $+commands[killall] )); then
-  alias -E killall='nocorrect \killall'
-elif (( $+commands[pkill] )); then
-  alias -E killall='nocorrect \pkill'
-fi
-
-if (( $+commands[systemctl] )); then
-  alias -E systemctl='nocorrect \systemctl'
-fi
+alias -E man='noglob \man'
+alias -E find='noglob \find'
 
 # sudo aliases
 if (( $+commands[sudo] )); then
@@ -148,7 +136,6 @@ if (( $+commands[sudo] )); then
     done
     eval "$precommands command sudo ${(q)@}"
   }
-  alias -E sudo='nocorrect sudo '
 fi
 
 function quark-alias-create-please-command {
@@ -211,7 +198,7 @@ fi
 
 # dnf aliases
 if (( $+commands[dnf] )); then
-  alias -E dnf='nocorrect noglob \dnf'
+  alias -E dnf='noglob \dnf'
 fi
 
 # vim aliases
