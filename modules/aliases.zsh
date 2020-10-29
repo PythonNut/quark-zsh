@@ -354,8 +354,6 @@ function quark-expand-alias {
   } always {
     unfunction "quark-expand-alias-smart-space" "quark-alias-smart-expand"
   }
-
-  _zsh_highlight 2>/dev/null
 }
 
 zle -N quark-expand-alias
