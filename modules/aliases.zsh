@@ -107,7 +107,7 @@ alias -g Q='>&/dev/null&'
 
 # regular aliases
 alias su='su -'
-alias watch='\watch -n 1 -d '
+alias watch='\watch -n 1'
 alias emacs='\emacs -nw'
 alias df='\df -h'
 alias ping='\ping -c 10'
