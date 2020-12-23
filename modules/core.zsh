@@ -264,7 +264,7 @@ function quark-async-renice {
       command ionice -c 3 -p $$
   fi
 
-  if (( $+commands[schedtoo] )); then
+  if (( $+commands[schedtool] )); then
       command schedtool -B $$
   fi
 }
