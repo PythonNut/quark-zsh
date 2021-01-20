@@ -58,6 +58,7 @@ fi
 : ${key[Down]:=${terminfo[kcud1]}}
 : ${key[PageUp]:=${terminfo[kpp]}}
 : ${key[PageDown]:=${terminfo[knp]}}
+: ${key[BackTab]:=${terminfo[kcbt]}}
 
 # let the terminal take care of these
 key[Left]=${terminfo[kcub1]}
