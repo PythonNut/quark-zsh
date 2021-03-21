@@ -92,7 +92,7 @@ fi
 
 # safety aliases
 alias rm='\rm -iv'
-alias cp='\cp -riv'
+alias cp='\cp -riv --reflink=auto'
 alias mv='\mv -iv'
 alias mkdir="\mkdir -vp"
 alias ln="\ln -s"
