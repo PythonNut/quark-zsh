@@ -180,21 +180,11 @@ if (( $+commands[yay] )); then
   alias y='yay'
   alias yi='yay -S'
   alias yu='yay -Syu --noconfirm'
-
-elif (( $+commands[yaourt] )); then
-  alias y='yaourt'
-  alias yi='yaourt -Sa'
-  alias yr='yaourt -Rs'
-  alias ys='yaourt -Ss'
-  alias yu='yaourt -Syyua --noconfirm'
-  alias yuu='yaourt -Syyua --noconfirm --devel'
 fi
 
-if (( $+commands[aurman] )); then
-  alias a='aurman'
-  alias ai='aurman -S'
-  alias au='aurman -Syyu --noconfirm --noedit'
-  alias auu='aurman -Syyu --noconfirm --noedit --devel'
+if (( $+commands[paru] )); then
+    alias pi='paru -S'
+    alias pu='paru -Syu --noconfirm'
 fi
 
 # dnf aliases
