@@ -113,7 +113,6 @@ alias df='\df -h'
 alias ping='\ping -c 10'
 alias :q='exit'
 alias exi='exit'
-alias -E exit=' exit'
 alias errcho='>&2 echo'
 
 if (( $+commands[glocate] )); then

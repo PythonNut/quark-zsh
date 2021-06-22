@@ -1,7 +1,7 @@
 # =============
 # Adaptive Exit
 # =============
-integer _exitForce=0
+ QUARK_EXIT_FLAG=0
 
 # exit with background jobs lists them
 # use logout for normal exit or EXIT
@@ -39,12 +39,12 @@ function exit() {
   fi
 
   disown_running && builtin exit "$@"
-  if [[ $_exitForce == $(fc -l) ]]; then
+  if [[ $QUARK_EXIT_FLAG == $(fc -l) ]]; then
     builtin exit
   else
     echo "You have stopped jobs:"
     jobs
-    _exitForce=$(fc -l)
+    QUARK_EXIT_FLAG=$(fc -l)
   fi
 }
 
