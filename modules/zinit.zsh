@@ -10,7 +10,7 @@ ZPFX=${ZINIT[HOME_DIR]}/polaris
 # Check if zplug is installed
 if [[ ! -d ${ZINIT[HOME_DIR]} ]]; then
   mkdir ${ZINIT[HOME_DIR]}
-  git clone --depth 10 https://github.com/zdharma/zinit.git ${ZINIT[HOME_DIR]}/bin
+  git clone --depth 10 https://github.com/zdharma-continuum/zinit.git ${ZINIT[HOME_DIR]}/bin
   chmod og-x ${ZINIT[HOME_DIR]}
 fi
 
@@ -21,7 +21,7 @@ autoload -Uz _zinit
 zinit light hlissner/zsh-autopair
 
 zinit ice atload'[[ -f  ${FAST_WORK_DIR}/current_theme.zsh ]] || fast-theme $ZDOTDIR/fsh/custom.ini'
-zinit light zdharma/fast-syntax-highlighting
+zinit light zdharma-continuum/fast-syntax-highlighting
 
 zinit ice blockf
 zinit light zsh-users/zsh-completions
