@@ -8,10 +8,10 @@ fi
 source "${0%/*}/../modules/core.zsh"
 
 if (( $+commands[emacs] )) && [[ -f ~/.emacs.d/README.md ]]; then
-  if [[ -n $DISPLAY || -n $__CFBundleIdentifier ]]; then
+  if [[ -n $DISPLAY || $OSTYPE == 'darwin'* ]]; then
     if [[ -n $XDG_RUNTIME_DIR && -e $XDG_RUNTIME_DIR/emacs/server ||
           -z $XDG_RUNTIME_DIR && -e /run/user/$UID/emacs/server ||
-          -n $__CFBundleIdentifier && -e ${TMPDIR}emacs$UID/server ]] ; then
+          $OSTYPE == 'darwin'* && -e ${TMPDIR}emacs$UID/server ]] ; then
       if [[ -z ${@} ]]; then
         if [[ -z ASYNC || $(emacsclient -e "(frame-parameter (window-frame) 'outer-window-id)") == "nil" ]]; then
           emacsclient -c
