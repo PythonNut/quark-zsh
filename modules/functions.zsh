@@ -59,7 +59,7 @@ function lv() {
   emulate -LR zsh
   local p=$argv[-1]
   [[ -d $p ]] && { argv[-1]=(); } || p='.'
-  find $p ! -type d | sed 's:^./::' | egrep "${@:-.}"
+  find $p ! -type d | sed 's:^./::' | grep -E "${@:-.}"
 }
 alias -E lv="noglob lv"
 

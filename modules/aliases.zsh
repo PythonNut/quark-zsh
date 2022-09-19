@@ -56,12 +56,6 @@ else
   alias -E lst=" lsa -I '"${BORING_FILES//\|/\' -I \'}"'"
 fi
 
-if (( $+commands[gegrep] )); then
-  alias -E egrep='\gegrep --line-buffered --color=auto'
-else
-  alias -E egrep='\egrep --line-buffered --color=auto'
-fi
-
 # cd aliases
 alias -- -='cd -'
 alias -- --='cd -2'
@@ -98,7 +92,7 @@ alias mkdir="\mkdir -vp"
 alias ln="\ln -s"
 
 # global aliases
-alias -g G='|& egrep -i'
+alias -g G='|& grep -iE'
 alias -g L='|& less -R'
 alias -g Lr='|& less'
 alias -g D='>&/dev/null'
