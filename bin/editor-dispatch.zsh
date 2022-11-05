@@ -7,6 +7,14 @@ fi
 
 source "${0%/*}/../modules/core.zsh"
 
+function focus-emacs {
+    if [[ -f ~/.emacs.d/modules/config-desktop.el ]]; then
+      emacsclient -e "(my/activate-emacs)"
+    else
+      quark-switch-focus-by-name emacs
+    fi
+}
+
 if (( $+commands[emacs] )) && [[ -f ~/.emacs.d/README.md ]]; then
   if [[ -n $DISPLAY || $OSTYPE == 'darwin'* ]]; then
     if [[ -n $XDG_RUNTIME_DIR && -e $XDG_RUNTIME_DIR/emacs/server ||
@@ -16,21 +24,19 @@ if (( $+commands[emacs] )) && [[ -f ~/.emacs.d/README.md ]]; then
         if [[ -z ASYNC || $(emacsclient -e "(frame-parameter (window-frame) 'outer-window-id)") == "nil" ]]; then
           emacsclient -c
         else
-          if [[ -f ~/.emacs.d/modules/config-desktop.el ]]; then
-            emacsclient -e "(my/activate-emacs)"
-          else
-            quark-switch-focus-by-name emacs
-          fi
+          focus-emacs
         fi
       else
-        emacsclient -q -a emacs ${@} &
-        if [[ -f ~/.emacs.d/modules/config-desktop.el ]]; then
-          emacsclient -e "(my/activate-emacs)"
-        else
-          quark-switch-focus-by-name emacs
+        if (( $+commands[xdotool] )); then
+          active_window=$(xdotool getactivewindow)
         fi
+        emacsclient -q -a emacs ${@} &
+        focus-emacs
         if [[ -z $ASYNC ]]; then
            wait
+           if [[ -n $active_window ]]; then
+             xdotool windowactivate $active_window
+           fi
         fi
       fi
     else
