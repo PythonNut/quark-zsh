@@ -51,5 +51,6 @@ zinit ice pick'async.zsh'
 zinit light mafredri/zsh-async
 zinit ice atload'_zsh_autosuggest_start'
 zinit light zsh-users/zsh-autosuggestions
+zinit ice ver"29b32843"
 zinit light marlonrichert/zsh-autocomplete
 zinit light willghatch/zsh-hooks
