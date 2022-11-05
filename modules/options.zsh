@@ -73,6 +73,7 @@ setopt magic_equal_subst      # expand expressions after =
 setopt prompt_subst           # Preform live prompt substitution
 setopt transient_rprompt      # Get rid of old rprompts
 setopt continue_on_error      # don't stop! stop = bad
+setopt combining_chars        # support combining unicode chars
 
 HISTFILE=$ZDOTDIR/.histfile
 HISTSIZE=50000
