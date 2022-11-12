@@ -268,3 +268,14 @@ function quark-async-renice {
       command schedtool -B $$
   fi
 }
+
+quark-urlencode() {
+  local length="${#1}"
+  for (( i = 0; i < length; i++ )); do
+    local c="${1:$i:1}"
+    case $c in
+        (%) printf '%%%02X' "'$c" ;;
+        (*) printf "%s" "$c" ;;
+   esac
+ done
+}

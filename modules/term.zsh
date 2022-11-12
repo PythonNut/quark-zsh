@@ -79,3 +79,38 @@ bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
+
+quark_osc133_prompt_executing=''
+
+function quark-osc133-prompt-precmd() {
+  local ret="$?"
+  if [[ $quark_osc133_prompt_executing != 0 ]]; then
+    _PROMPT_SAVE_PS1="$PS1"
+      _PROMPT_SAVE_PS2="$PS2"
+      PS1=$'%{\e]133;P;k=i\a%}'$PS1$'%{\e]133;B\a\e]122;> \a%}'
+      PS2=$'%{\e]133;P;k=s\a%}'$PS2$'%{\e]133;B\a%}'
+  fi
+  if [[ -n quark_osc133_prompt_executing ]]; then
+    printf "\033]133;D;%s;aid=%s\007" "$ret" "$$"
+  fi
+  printf "\033]133;A;cl=m;aid=%s\007" "$$"
+  quark_osc133_prompt_executing=0
+}
+
+function quark-osc133-prompt-preexec {
+  PS1="$_PROMPT_SAVE_PS1"
+  PS2="$_PROMPT_SAVE_PS2"
+  printf "\033]133;C;\007"
+  quark_osc133_prompt_executing=1
+}
+
+
+function quark-osc7-chpwd {
+  printf '\e]7;file://%s%s\e\\' "$HOSTNAME" "$(_urlencode "$PWD")"
+}
+
+if [[ $TERM_PROGRAM == "WezTerm" ]]; then
+  add-zsh-hook preexec quark-osc133-prompt-preexec
+  add-zsh-hook precmd quark-osc133-prompt-precmd
+  add-zsh-hook chpwd quark-osc7-chpwd
+fi
