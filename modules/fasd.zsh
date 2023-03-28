@@ -17,9 +17,11 @@ function () {
   source "$fasd_cache"
   source =fasd
   function _fasd_preexec() {
-    {
-      { eval "fasd --proc $(fasd --sanitize $2)"; } >> "/dev/null" 2>&1
-    } &!
+    (
+        {
+          { eval "fasd --proc $(fasd --sanitize $2)"; } >> "/dev/null" 2>&1
+        } &!
+    )
   }
 }
 
