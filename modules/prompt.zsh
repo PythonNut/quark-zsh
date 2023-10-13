@@ -69,6 +69,9 @@ function quark-compute-prompt {
 
   PS1=$'%{%B%F{red}%}%(?..${QUARK_RETURN_CODE_ARROW} %?${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]:+:${QUARK_ERROR_CODE_SIGNAL_MAP[${(%%)${:-%?}}]}}\n)%{%b%F{default}%}'
 
+  # move conda env to after error code if possible
+  PS1+='${${PS1:#\(*}:+${CONDA_DEFAULT_ENV:+($CONDA_DEFAULT_ENV) }}'
+
   # user (highlight root in red)
   if [[ -z $QUARK_BORING_USERS[(R)$USER] ]]; then
     PS1+='%{%F{default}%}%B%{%(!.%F{red}.%F{black})%}%n'
