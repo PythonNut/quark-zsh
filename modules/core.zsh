@@ -208,7 +208,7 @@ function quark_md5 {
   message+=($reply)
 
   local -i h1=1732584193 h2=4023233417 h3=2562383102 h4=271733878
-  local -i chunk_ofst a b c d i f g amount to_rotate
+  local -i10 chunk_ofst a b c d i f g amount to_rotate
   for ((chunk_ofst=1; chunk_ofst<=$#message; chunk_ofst+=64)); do
     (( a=$h1, b=$h2, c=$h3, d=$h4 ))
     chunk=(${message[$chunk_ofst,$chunk_ofst+63]})
