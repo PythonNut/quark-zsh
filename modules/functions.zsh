@@ -247,3 +247,13 @@ function clippaste() {
     return 1
   fi
 }
+
+function yy() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    echo cd "$cwd"
+    builtin cd -- "$cwd"
+  fi
+  command rm -f -- "$tmp"
+}
