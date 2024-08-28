@@ -187,8 +187,8 @@ function mcd() {
   cd $1
 }
 
-function ix() {
-  curl -F 'f:1=<-' ix.io
+function webpaste() {
+  curl -s -F "content=<-" http://dpaste.com/api/v2/
 }
 
 function swap() {
