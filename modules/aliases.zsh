@@ -118,6 +118,7 @@ fi
 # suppression aliases
 alias -E man='noglob \man'
 alias -E find='noglob \find'
+alias -E zmv='noglob zmv'
 
 # sudo aliases
 if (( $+commands[sudo] )); then
