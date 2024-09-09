@@ -86,7 +86,11 @@ fi
 
 # safety aliases
 alias rm='\rm -iv'
-alias cp='\cp -riv --reflink=auto'
+if [[ $OSTYPE = darwin* ]] && (( $+commands[gcp] )); then
+  alias cp='\gcp -riv --reflink=auto'
+else
+  alias cp='\cp -riv --reflink=auto'
+fi
 alias mv='\mv -iv'
 alias mkdir="\mkdir -vp"
 alias ln="\ln -s"
