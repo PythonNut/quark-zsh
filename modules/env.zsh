@@ -139,11 +139,7 @@ if [[ ${PWD:A} == (${${:-~}:A}|/) ]]; then
   if [[ $degraded_terminal[display_host] == 1 ]]; then
     # And if tmux is installed, but not currently running
     if (( $+commands[tmux] )) && [[ -z $TMUX ]]; then
-      if tmux ls 2> /dev/null; then
-        exec tmux attach
-      else
-        exec tmux
-      fi
+      exec tmux new -As0
     fi
   fi
 fi
