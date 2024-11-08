@@ -49,6 +49,7 @@ elif [[ $OSTYPE = darwin* ]]; then
     alias lsa='\gls --color --group-directories-first'
     alias -E lst=" lsa -I '"${BORING_FILES//\|/\' -I \'}"'"
   else
+    alias -E lsa=' \ls -G'
     alias -E lst=' \ls -G'
    fi
 else
