@@ -265,6 +265,10 @@ if (( $+commands[fasd] )); then
   alias j='fasd -e cd -d' # cd, same functionality as j in autojump
 fi
 
+if (( $+commands[awk] )); then
+  alias sumlines="awk '{n += \$1}; END{print n}'"
+fi
+
 # ==============
 # Expand aliases
 # ==============
