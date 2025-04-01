@@ -185,6 +185,7 @@ function wc-counter() {
 function mcd() {
   mkdir -p $1
   cd $1
+  echo cwd to $(pwd)
 }
 
 function webpaste() {
