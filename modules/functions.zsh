@@ -258,3 +258,9 @@ function yy() {
   fi
   command rm -f -- "$tmp"
 }
+
+function nd() {
+  local target=${2:-$(pwd)}
+  typeset -g $1=${target}
+  hash -d $1=${target}
+}

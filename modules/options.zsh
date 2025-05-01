@@ -67,7 +67,6 @@ setopt pushd_silent           # don't tell me though, I know.
 setopt pushd_ignore_dups      # duplicates are redundant (duh)
 setopt pushd_minus            # invert pushd behavior
 setopt pushd_to_home          # pushd == pushd ~
-setopt auto_name_dirs         # if I set a=/usr/bin, cd a works
 setopt magic_equal_subst      # expand expressions after =
 
 setopt prompt_subst           # Preform live prompt substitution
