@@ -324,7 +324,10 @@ function quark-expand-alias {
 
     local -a cmd
     cmd=(${(@s/;/)LBUFFER:gs/[^\\[:IDENT:]]/;})
-    if [[ -n "$command_abbrevs[$cmd[-1]]" && $#cmd == 1 ]]; then
+    if [[ -z $cmd ]]; then
+      zle magic-space
+
+    elif [[ -n "$command_abbrevs[$cmd[-1]]" && $#cmd == 1 ]]; then
       quark-alias-smart-expand $cmd[-1] "$(${=${(e)command_abbrevs[$cmd[-1]]}})"
 
     elif [[ -n "$global_abbrevs[$cmd[-1]]" ]]; then
