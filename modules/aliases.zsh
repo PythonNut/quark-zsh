@@ -330,9 +330,6 @@ function quark-expand-alias {
     elif [[ -n "$global_abbrevs[$cmd[-1]]" ]]; then
       quark-alias-smart-expand -g $cmd[-1] "$(${=${(e)global_abbrevs[$cmd[-1]]}})"
 
-    elif [[ "${(j: :)cmd}" == *\!* && -n "$aliases[$cmd[-1]]" ]]; then
-      LBUFFER="$aliases[$cmd[-1]] "
-
     elif [[ "$+expand[(r)$cmd[-1]]" != 1 && "$cmd[-1]" != (\\|\"|\')* ]]; then
       zle _expand_alias
       if [[ $1 != no_space ]]; then
