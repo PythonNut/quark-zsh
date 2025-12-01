@@ -218,7 +218,7 @@ if (( $+commands[git] )); then
   alias -ec gcam="echo -E git commit -v -a -m '{}'"
   alias gca!='git commit -v -a --amend'
 
-  alias gck='git checkout'
+  alias gck='git checkout -m'
   alias -ec gfork='echo -E git checkout -b {} $(git rev-parse --abbrev-ref HEAD 2>/dev/null)'
 
   alias gb='git branch -vvv'
@@ -228,7 +228,9 @@ if (( $+commands[git] )); then
   alias gra='git rebase --autostash'
 
   alias gd='git diff'
+  alias gds='git diff --stat'
   alias gdc='git diff --cached'
+  alias gdsc='git diff --stat --cached'
 
   alias gl='git log --oneline --graph --decorate'
 
