@@ -90,7 +90,9 @@ READNULLCMD="less"
 # Persistent directory stack
 # ==========================
 
-autoload -Uz chpwd_recent_dirs cdr
+autoload -Uz cdr
+# Preload to avoid extendedglob parse errors when called under emulate sh (e.g. fasd).
+autoload -Uz +X chpwd_recent_dirs
 add-zsh-hook chpwd chpwd_recent_dirs
 
 zstyle ':chpwd:*' recent-dirs-max 100
