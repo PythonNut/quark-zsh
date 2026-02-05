@@ -194,12 +194,23 @@ function webpaste() {
 
 function swap() {
   local TMPFILE=tmp.$$
-  mv "$1" $TMPFILE && mv "$2" "$1" && mv $TMPFILE "$2"
+  local src="$1" dst="$2"
+  (( $# == 2 )) || { print -u2 "swap: requires exactly 2 paths"; return 1 }
+  [[ $src != "/" ]] && src=${src%%/##}
+  [[ $dst != "/" ]] && dst=${dst%%/##}
+  [[ -e $src ]] || { print -u2 "swap: $src: No such file or directory"; return 1 }
+  [[ -e $dst ]] || { print -u2 "swap: $dst: No such file or directory"; return 1 }
+  mv "$src" "$TMPFILE" && mv "$dst" "$src" && mv "$TMPFILE" "$dst"
 }
 
 function bak() {
-  for f in $@; do
-    mv -iv $f $f.bak
+  local f base
+  (( $# )) || { print -u2 "bak: missing operand"; return 1 }
+  for f in "$@"; do
+    base="$f"
+    [[ $base != "/" ]] && base=${base%%/##}
+    [[ -e $base ]] || { print -u2 "bak: $base: No such file or directory"; continue }
+    mv -iv "$base" "$base.bak"
   done
 }
 
