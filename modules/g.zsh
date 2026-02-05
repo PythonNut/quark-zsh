@@ -43,8 +43,15 @@ function g() {
   # check if dir is registered in database
   elif (( $+commands[fasd] )) && [[ -n $(fasd -d $@) ]]; then
     local fasd_target=$(fasd -d $@)
-    local teleport
-    teleport=${${fasd_target:A}/${HOME:A}/\~}
+    local teleport display_target home_display
+    if [[ -o chase_links ]]; then
+      display_target=${fasd_target:A}
+      home_display=${HOME:A}
+    else
+      display_target=${fasd_target:a}
+      home_display=${HOME:a}
+    fi
+    teleport=${${display_target}/$home_display/\~}
     echo -n "zsh: teleporting: $@ → "
     print -P "%B%F{magenta}$teleport%F{default}%b"
     cd $fasd_target
