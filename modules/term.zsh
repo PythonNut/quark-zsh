@@ -8,7 +8,31 @@ zle -N self-insert url-quote-magic
 git-escape-magic
 
 autoload -Uz bracketed-paste-magic
-zle -N bracketed-paste bracketed-paste-magic
+
+typeset -ga QUARK_VI_ESCAPE_CHORDS=(jj kk jk)
+
+function self-insert-quark-literal-sequence () {
+  LBUFFER+=$KEYS
+}
+zle -N self-insert-quark-literal-sequence
+
+function quark-bracketed-paste-magic () {
+  local chord paste_status
+
+  for chord in $QUARK_VI_ESCAPE_CHORDS; do
+    global_bindkey "$chord" self-insert-quark-literal-sequence
+  done
+
+  bracketed-paste-magic "$@"
+  paste_status=$?
+
+  for chord in $QUARK_VI_ESCAPE_CHORDS; do
+    global_bindkey "$chord" vi-cmd-mode
+  done
+
+  return $paste_status
+}
+zle -N bracketed-paste quark-bracketed-paste-magic
 
 function quark-echotc {
   TERM=$QUARK_OLD_TERM echotc $@ 2> /dev/null
