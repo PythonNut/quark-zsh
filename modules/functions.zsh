@@ -214,6 +214,87 @@ function bak() {
   done
 }
 
+function osc52-copy() {
+  emulate -L zsh
+
+  if (( $# > 1 )); then
+    print "Usage: osc52-copy [FILE]" >&2
+    return 2
+  fi
+
+  if (( $# == 1 )) && [[ ! -r "$1" ]]; then
+    print "osc52-copy: '$1' is not readable" >&2
+    return 1
+  fi
+
+  if (( ! ${+commands[base64]} )); then
+    print "osc52-copy: base64 not found" >&2
+    return 1
+  fi
+
+  local tty=/dev/tty
+  local tmux_wrap=0
+  local screen_wrap=0
+  local tmux_client_tty
+  local tmux_ssh_tty
+  if [[ -n "${TMUX:-}" ]] && (( ${+commands[tmux]} )); then
+    tmux_client_tty="$(tmux display-message -p '#{client_tty}' 2> /dev/null)"
+  fi
+
+  if [[ -n "$tmux_client_tty" && "$tmux_client_tty" != -* ]]; then
+    tty="$tmux_client_tty"
+  elif [[ -n "${SSH_TTY:-}" ]]; then
+    tty="$SSH_TTY"
+    if [[ -n "${TMUX:-}" ]] && (( ${+commands[tmux]} )); then
+      tmux_ssh_tty="${$(tmux show-environment SSH_TTY 2> /dev/null)#SSH_TTY=}"
+      [[ -n "$tmux_ssh_tty" && "$tmux_ssh_tty" != -* ]] && tty="$tmux_ssh_tty"
+    fi
+  elif [[ -n "${TMUX:-}" ]]; then
+    tmux_wrap=1
+  elif [[ "${TERM:-}" == screen* ]]; then
+    screen_wrap=1
+  fi
+
+  if [[ ! -w "$tty" ]]; then
+    print "osc52-copy: $tty is not writable" >&2
+    return 1
+  fi
+
+  local encoded
+  encoded="$(base64 < "${1:-/dev/stdin}" | tr -d '\r\n')"
+
+  if (( tmux_wrap )); then
+    printf '\033Ptmux;\033\033]52;c;!\a\033\\' > "$tty"
+    printf '\033Ptmux;\033\033]52;c;%s\a\033\\' "$encoded" > "$tty"
+  elif (( screen_wrap )); then
+    printf '\033P\033]52;c;!\a\033\\' > "$tty"
+    printf '\033P\033]52;c;%s\a\033\\' "$encoded" > "$tty"
+  else
+    printf '\033]52;c;!\a' > "$tty"
+    printf '\033]52;c;%s\a' "$encoded" > "$tty"
+  fi
+}
+
+function osc52-debug() {
+  emulate -L zsh
+
+  print -r -- "TERM=${TERM:-}"
+  print -r -- "TMUX=${TMUX:-}"
+  print -r -- "SSH_TTY=${SSH_TTY:-}"
+  print -r -- "DISPLAY=${DISPLAY:-}"
+  print -r -- "WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-}"
+  print -r -- "tty=$(tty 2> /dev/null)"
+  print -r -- "/dev/tty writable=$([[ -w /dev/tty ]] && print yes || print no)"
+
+  if (( ${+commands[tmux]} )) && [[ -n "${TMUX:-}" ]]; then
+    print -r -- "tmux set-clipboard=$(tmux show-options -gv set-clipboard 2> /dev/null)"
+    print -r -- "tmux allow-passthrough=$(tmux show-options -gv allow-passthrough 2> /dev/null)"
+    print -r -- "tmux client=$(tmux display-message -p '#{client_termname} #{client_termfeatures}' 2> /dev/null)"
+    print -r -- "tmux client_tty=$(tmux display-message -p '#{client_tty}' 2> /dev/null)"
+    print -r -- "tmux SSH_TTY=$(tmux show-environment SSH_TTY 2> /dev/null)"
+  fi
+}
+
 function clipcopy() {
   emulate -L zsh
 
@@ -228,13 +309,83 @@ function clipcopy() {
   elif [ -n "${DISPLAY:-}" ] && (( ${+commands[xsel]} )); then
     xsel --clipboard --input < "${1:-/dev/stdin}"
   elif [ -n "${TMUX:-}" ] && (( ${+commands[tmux]} )); then
-    tmux load-buffer "${1:--}"
+    osc52-copy "${1:-/dev/stdin}" || tmux set-buffer -w "$(< "${1:-/dev/stdin}")"
   elif [[ $(uname -r) = *icrosoft* ]]; then
     clip.exe < "${1:-/dev/stdin}"
+  elif [[ -w /dev/tty ]] && (( ${+commands[base64]} )); then
+    osc52-copy "${1:-/dev/stdin}"
   else
-    print "clipcopy: Platform $OSTYPE not supported or xclip/xsel not installed" >&2
+    print "clipcopy: Platform $OSTYPE not supported or no clipboard helper installed" >&2
     return 1
   fi
+}
+
+function copypath() {
+  emulate -L zsh
+
+  local mode=quote
+  while (( $# > 0 )); do
+    case "$1" in
+      (-q|--quote)
+        mode=quote
+        shift
+        ;;
+      (-e|--escape)
+        mode=escape
+        shift
+        ;;
+      (-r|--raw|--no-escape)
+        mode=raw
+        shift
+        ;;
+      (--)
+        shift
+        break
+        ;;
+      (-*)
+        print "Usage: copypath [-q|--quote|-e|--escape|-r|--raw] FILE ..." >&2
+        return 2
+        ;;
+      (*)
+        break
+        ;;
+    esac
+  done
+
+  if (( $# == 0 )); then
+    print "Usage: copypath [-q|--quote|-e|--escape|-r|--raw] FILE ..." >&2
+    return 2
+  fi
+
+  local file
+  local abs_path
+  local -a out_paths
+  for file; do
+    if [[ ! -e "$file" ]]; then
+      print "copypath: '$file' does not exist" >&2
+      return 1
+    fi
+
+    abs_path="${file:A}"
+    case "$mode" in
+      (quote)
+        if [[ "$abs_path" == *[^A-Za-z0-9_@%+=:,./-]* ]]; then
+          out_paths+=( "${(qq)abs_path}" )
+        else
+          out_paths+=( "$abs_path" )
+        fi
+        ;;
+      (escape)
+        out_paths+=( "${(q)abs_path}" )
+        ;;
+      (raw)
+        out_paths+=( "$abs_path" )
+        ;;
+    esac
+  done
+
+  print -rn -- "${(j: :)out_paths}" | clipcopy 2> /dev/null || print "copypath: could not copy to clipboard" >&2
+  print -r -l -- $out_paths
 }
 
 function clippaste() {
