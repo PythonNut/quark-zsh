@@ -10,6 +10,9 @@ git-escape-magic
 autoload -Uz bracketed-paste-magic
 
 typeset -ga QUARK_VI_ESCAPE_CHORDS=(jj kk jk)
+typeset -ga QUARK_BRACKETED_PASTE_SELF_INSERT_KEYS=(
+  '[' ']' '{' '}' '(' ')' '"' "'" '`'
+)
 
 function self-insert-quark-literal-sequence () {
   LBUFFER+=$KEYS
@@ -17,18 +20,36 @@ function self-insert-quark-literal-sequence () {
 zle -N self-insert-quark-literal-sequence
 
 function quark-bracketed-paste-magic () {
-  local chord paste_status
+  local chord key paste_status
 
-  for chord in $QUARK_VI_ESCAPE_CHORDS; do
-    global_bindkey "$chord" self-insert-quark-literal-sequence
-  done
+  # TODO: Give paste-time self-insert widgets enough left-hand command context
+  # so pasting a fragment like HEAD@{1} after "git show " can still trigger
+  # git-escape-magic.  bracketed-paste-magic currently processes PASTED in an
+  # empty buffer, so widgets only see the pasted fragment unless a paste-init
+  # hook explicitly folds in the existing command prefix.
+  {
+    for chord in $QUARK_VI_ESCAPE_CHORDS; do
+      global_bindkey "$chord" self-insert-quark-literal-sequence
+    done
 
-  bracketed-paste-magic "$@"
-  paste_status=$?
+    for key in $QUARK_BRACKETED_PASTE_SELF_INSERT_KEYS; do
+      global_bindkey "$key" self-insert
+    done
 
-  for chord in $QUARK_VI_ESCAPE_CHORDS; do
-    global_bindkey "$chord" vi-cmd-mode
-  done
+    bracketed-paste-magic "$@"
+    paste_status=$?
+  } always {
+    for key in '[' '{' '(' '"' "'" '`'; do
+      global_bindkey "$key" autopair-insert
+    done
+    for key in ']' '}' ')'; do
+      global_bindkey "$key" autopair-close
+    done
+
+    for chord in $QUARK_VI_ESCAPE_CHORDS; do
+      global_bindkey "$chord" vi-cmd-mode
+    done
+  }
 
   return $paste_status
 }
