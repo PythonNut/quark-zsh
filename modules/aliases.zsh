@@ -206,10 +206,7 @@ if (( $+commands[git] )); then
 
   alias gp="git pull --rebase"
   alias gpa="git pull --rebase --autostash"
-
-  alias ga='git add'
-  alias gau='git add -u'
-  alias gaa='git add -A'
+  alias gfa='git fetch --all'
 
   alias gc='git commit -v'
   alias -ec gcm="echo -E git commit -v -m '{}'"
@@ -218,23 +215,24 @@ if (( $+commands[git] )); then
   alias -ec gcam="echo -E git commit -v -a -m '{}'"
   alias gca!='git commit -v -a --amend'
 
-  alias gck='git checkout -m'
-  alias -ec gfork='echo -E git checkout -b {} $(git rev-parse --abbrev-ref HEAD 2>/dev/null)'
+  alias gsw='git switch -m'
+  alias gswc='git switch -c'
+
+  alias gr='git restore'
+  alias grs='git restore --staged'
+  alias grsw='git restore --staged --worktree'
+  alias gro='git restore --ours'
+  alias grt='git restore --theirs'
 
   alias gb='git branch -vvv'
-  alias gm='git merge'
-  alias gma='git merge --autostash'
-  alias gr='git rebase'
-  alias gra='git rebase --autostash'
+  alias gre='git rebase'
+  alias grea='git rebase --autostash'
 
-  alias gd='git diff'
-  alias gds='git diff --stat'
-  alias gdc='git diff --cached'
-  alias gdsc='git diff --stat --cached'
+  alias gd='git diff --stat -p'
+  alias gds='git diff --staged --stat -p'
 
   alias gl='git log --oneline --graph --decorate'
-
-  alias -eg .B='echo $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "N/A")'
+  alias gla='git log --oneline --graph --decorate --all'
 fi
 
 if (( $+commands[git-annex] )); then
